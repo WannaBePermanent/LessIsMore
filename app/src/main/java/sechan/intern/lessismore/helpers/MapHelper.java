@@ -1,10 +1,14 @@
 package sechan.intern.lessismore.helpers;
 
-/**
- * Created by NAVER on 2017-07-21.
- */
 
 public class MapHelper {
+    private static MapHelper instance = null;
+    public static MapHelper getInstance() {
+        if (instance == null) {
+            instance = new MapHelper();
+        }
+        return instance;
+    }
         //NMapView mMapView;
         // NGeoPoint point;
         // String nameTag;

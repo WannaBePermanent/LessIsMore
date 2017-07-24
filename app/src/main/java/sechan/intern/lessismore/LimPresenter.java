@@ -4,18 +4,21 @@ import android.support.annotation.NonNull;
 
 import java.util.Date;
 
-import sechan.intern.lessismore.helpers.Comp;
+import sechan.intern.lessismore.components.Comp;
+import sechan.intern.lessismore.components.CompImage;
+import sechan.intern.lessismore.components.CompImages;
+import sechan.intern.lessismore.components.CompText;
 import sechan.intern.lessismore.helpers.Post;
 
-/**
- * Created by NAVER on 2017-07-21.
- */
+
 
 public class LimPresenter implements LimContract.Presenter {
+
     //Singleton Pattern
     private final LimRepo mRepo;
 
     private final LimContract.View mView;
+    //private static final ArrayList<Comp> compOrder = new ArrayList<>();
 
     public LimPresenter(@NonNull LimRepo repo,
                         @NonNull LimContract.View view) {
@@ -27,44 +30,43 @@ public class LimPresenter implements LimContract.Presenter {
     //메소드들이 LimContract에 맵핑되므로 LimContract와 같이 수정해야함
     @Override
     public void start() {
-
+    mView.showHelperLoaded(mRepo.helperLoaded()); // 나중에 삭제, Helper-Repo-Presenter-View가 잘 연결되어 있는지 확인
 
     }
 
-    public Post addComp(Comp.TextComp comp) {
-        return null;
+    public int addCompText(){
+       if(mRepo.addCompText() == 1) mView.showMessage("텍스트 추가 성공");
+        return 0;
     }
-    // 파라메터를 텍스트
-
-    public Post addComp(Comp.MapComp comp) {
-
-        return null;
-    } // 파라메터를 맵 관련 정보로 바꿔야함
-
-    public Post addComp(String imagepath) {
-        return null;
-
-    } // 파라메터를 이미지 관련 정보로 바꿔야할지도 모름
-
-    // 컴포넌트 추가 종류에 대한 PolyMorphism, 여기가 아니라 다른 곳에서 적용해야 할지도 모름
-    //추가
+    public int addCompImage(){
+        //mRepo.addCompImage();
+        return 0;
+    }
+    public int addCompImages(){
+        //mRepo.addCompImages();
+        return 0;
+    }
+    public int addCompMap(){
+        //mRepo.addCompMap();
+        return 0;
+    }
 
     public Post deleteComp(Comp comp) {
         return null;
     }
 
-    public Post updateComp(Comp.TextComp comp) {
+    public Post updateComp(CompText comp) {
         return null;
 
     }
     //수정, 삭제
 
-    public Post concatimgs(Comp.ImageComp img1, Comp.ImageComp img2) {
+    public Post concatimgs(CompImage img1, CompImage img2) {
         return null;
 
     } // 1개 + 1개
 
-    public Post concatimgs(Comp.ImagesComp imgs1, Comp.ImageComp img2) {
+    public Post concatimgs(CompImages imgs1, CompImage img2) {
         return null;
 
     }
@@ -85,5 +87,8 @@ public class LimPresenter implements LimContract.Presenter {
 
     } // 리턴과 파라메터 수정해야할지도 모름
 
+    public void loadList(){
 
+
+    }
 }

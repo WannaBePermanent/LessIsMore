@@ -2,12 +2,17 @@ package sechan.intern.lessismore.helpers;
 
 import java.util.List;
 
-/**
- * Created by NAVER on 2017-07-21.
- */
 
 public class DBHelper {
     // private final Post instance;
+    private static DBHelper instance = null;
+    public static DBHelper getInstance() {
+        if (instance == null) {
+            instance = new DBHelper();
+        }
+        return instance;
+    }
+
     List<Post> savedLists(){
 
         return null;
