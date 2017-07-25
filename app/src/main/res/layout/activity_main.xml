@@ -4,16 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="sechan.intern.lessismore.MainActivity"
     android:orientation="vertical"
-    >
-    <EditText
-        android:id="@+id/edit_title"
+    tools:context="sechan.intern.lessismore.MainActivity">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="제목을 입력해주세요."
-        android:inputType="text" />
+        android:background="@drawable/layout_border"
+        android:orientation="horizontal"
+
+
+        android:weightSum="1">
+
+        <EditText
+            android:id="@+id/edit_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="제목"
+            android:inputType="text" />
+
+        <ImageButton
+            android:id="@+id/btn_titleimage"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:adjustViewBounds="true"
+            android:background="?android:selectableItemBackground"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/icon_image" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,57 +56,62 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/layout_border"
+            android:layout_height="55dp"
             android:layout_marginBottom="1dp"
             android:layout_marginLeft="1dp"
             android:layout_marginRight="1dp"
+            android:background="@drawable/layout_border"
+            android:orientation="horizontal"
 
             >
 
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_load"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
+                android:adjustViewBounds="true"
                 android:background="?android:selectableItemBackground"
                 android:drawablePadding="4dp"
-                android:drawableTop="@drawable/icon_open"
-                android:text="불러오기" />
+                android:scaleType="centerInside"
+                android:text="불러오기"
+                app:srcCompat="@drawable/icon_open" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
+                android:adjustViewBounds="true"
                 android:background="?android:selectableItemBackground"
                 android:drawablePadding="4dp"
-                android:drawableTop="@drawable/icon_save"
-                android:text="저장" />
+                android:scaleType="centerInside"
+                android:text="저장"
+                app:srcCompat="@drawable/icon_save" />
 
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:adjustViewBounds="true"
                 android:background="?android:selectableItemBackground"
-                android:text="컴포넌트 추가"
                 android:drawablePadding="4dp"
-                android:drawableTop="@drawable/icon_add" />
+                android:scaleType="centerInside"
+                android:text="컴포넌트 추가"
+                app:srcCompat="@drawable/icon_add" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

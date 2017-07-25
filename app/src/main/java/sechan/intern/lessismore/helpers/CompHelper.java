@@ -7,7 +7,8 @@ import sechan.intern.lessismore.components.CompText;
 public class CompHelper {
     private final static int COMP_TEXT = 1;
     private final static int COMP_IMAGE = 2;
-    private final static int COMP_MAP = 3;
+    private final static int COMP_IMAGES = 3;
+    private final static int COMP_MAP = 4;
     private static CompHelper instance = null;
 
     public static CompHelper getInstance() {
@@ -20,6 +21,7 @@ public class CompHelper {
     public Post post;
 
     public Comp newCompText(){
+
      return new CompText();
  }
     public Comp newCompImage(){

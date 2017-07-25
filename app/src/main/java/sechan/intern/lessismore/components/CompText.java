@@ -2,8 +2,14 @@ package sechan.intern.lessismore.components;
 
 import java.util.List;
 
+import static sechan.intern.lessismore.LimContract.COMP_TEXT;
+
 
 public class CompText extends Comp {
+
+    public CompText(){
+        Category= COMP_TEXT;
+    }
 
     List<Style> style;
 

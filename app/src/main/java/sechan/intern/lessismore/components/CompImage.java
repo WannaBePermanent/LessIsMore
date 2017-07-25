@@ -1,11 +1,16 @@
 package sechan.intern.lessismore.components;
 
 
-public class CompImage extends Comp {
-    // Glide glide;
-    void setImage(String imagePath) {
+import static sechan.intern.lessismore.LimContract.COMP_IMAGE;
 
+public class CompImage extends Comp {
+    String imagePath;
+    public CompImage(String imagePath){
+        Category=COMP_IMAGE;
+        this.imagePath=imagePath;
     }
+
+
 
 
 }

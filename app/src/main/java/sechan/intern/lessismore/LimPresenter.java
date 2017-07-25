@@ -11,7 +11,6 @@ import sechan.intern.lessismore.components.CompText;
 import sechan.intern.lessismore.helpers.Post;
 
 
-
 public class LimPresenter implements LimContract.Presenter {
 
     //Singleton Pattern
@@ -30,23 +29,43 @@ public class LimPresenter implements LimContract.Presenter {
     //메소드들이 LimContract에 맵핑되므로 LimContract와 같이 수정해야함
     @Override
     public void start() {
-    mView.showHelperLoaded(mRepo.helperLoaded()); // 나중에 삭제, Helper-Repo-Presenter-View가 잘 연결되어 있는지 확인
+        mView.showHelperLoaded(mRepo.helperLoaded()); // 나중에 삭제, Helper-Repo-Presenter-View가 잘 연결되어 있는지 확인
+        mView.setAdapter(mRepo.getPost());
 
     }
 
-    public int addCompText(){
-       if(mRepo.addCompText() == 1) mView.showMessage("텍스트 추가 성공");
+/*    public int addCompText() {
+        // mRepo.savePostInstance(); 먼저 상태 저장해야함
+        if (mRepo.addCompText() == 1) {
+            mView.showMessage("텍스트 추가");
+            mView.displayComponent();
+        }
+        return 0;
+    }*/
+    public int addCompText() {
+        // mRepo.savePostInstance(); 먼저 상태 저장해야함
+        // index 규약 추후 수정
+        int rv = mRepo.addCompText();
+        if (rv >= 0) {
+            mView.showMessage("텍스트 추가");
+            mView.displayComponent(rv);
+        }
+        return -1;
+    }
+    public int addCompImage(String imagePath) {
+        if (mRepo.addCompImage(imagePath) == 1) {
+            mView.showMessage("이미지 추가");
+            mView.displayComponent();
+        }
         return 0;
     }
-    public int addCompImage(){
-        //mRepo.addCompImage();
-        return 0;
-    }
-    public int addCompImages(){
+
+    public int addCompImages() {
         //mRepo.addCompImages();
         return 0;
     }
-    public int addCompMap(){
+
+    public int addCompMap() {
         //mRepo.addCompMap();
         return 0;
     }
@@ -87,7 +106,7 @@ public class LimPresenter implements LimContract.Presenter {
 
     } // 리턴과 파라메터 수정해야할지도 모름
 
-    public void loadList(){
+    public void loadList() {
 
 
     }
