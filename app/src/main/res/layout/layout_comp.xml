@@ -11,7 +11,7 @@
         android:ems="10"
         android:text="123123" />
 
-    <EditText xmlns:android="http://schemas.android.com/apk/res/android"
+    <sechan.intern.lessismore.LimEditText
         android:id="@+id/edit_comp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

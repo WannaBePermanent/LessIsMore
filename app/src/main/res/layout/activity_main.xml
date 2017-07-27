@@ -37,6 +37,108 @@
             app:srcCompat="@drawable/icon_image" />
     </LinearLayout>
 
+
+    <LinearLayout
+        android:id="@+id/ll_textwidget"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="@drawable/layout_border"
+        android:orientation="horizontal"
+
+        >
+
+
+        <ImageButton
+            android:id="@+id/btn_inc_size"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="?android:selectableItemBackground"
+            android:drawablePadding="4dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/icon_font_increase" />
+
+        <ImageButton
+            android:id="@+id/btn_dec_size"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="?android:selectableItemBackground"
+            android:drawablePadding="4dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/icon_font_decrease" />
+
+        <ImageButton
+            android:id="@+id/btn_bold"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="?android:selectableItemBackground"
+            android:drawablePadding="4dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/icon_bold" />
+
+        <ImageButton
+            android:id="@+id/btn_italic"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="?android:selectableItemBackground"
+            android:drawablePadding="4dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/icon_italic" />
+
+        <ImageButton
+            android:id="@+id/btn_ul"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="?android:selectableItemBackground"
+            android:drawablePadding="4dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/icon_underline" />
+
+        <ImageButton
+            android:id="@+id/btn_color"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="?android:selectableItemBackground"
+            android:drawablePadding="4dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/icon_color" />
+    </LinearLayout>
+
+    <com.madrapps.pikolo.HSLColorPicker
+        android:id="@+id/colorPicker"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:visibility="gone"
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

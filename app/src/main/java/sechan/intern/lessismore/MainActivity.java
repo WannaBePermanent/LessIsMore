@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.madrapps.pikolo.HSLColorPicker;
+import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
+
 import java.util.ArrayList;
 
 import sechan.intern.lessismore.components.Comp;
@@ -29,10 +32,11 @@ public class MainActivity extends AppCompatActivity implements LimContract.View 
 
     ArrayList<String> mDataset;
     RecyclerView rv;
-    RecyclerView.Adapter<LimAdapter.ViewHolder> mAdapter;
+    LimAdapter mAdapter;
     ImageButton btn_save, btn_load, btn_add;
     ImageButton btn_text, btn_image, btn_map;
     ImageButton btn_titleimage;
+    ImageButton btn_inc, btn_dec, btn_bold, btn_italic, btn_color, btn_ul;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,17 +48,6 @@ public class MainActivity extends AppCompatActivity implements LimContract.View 
         mPresenter.start();
 
 
-//-----------------
-
-
-        /*
-        mAdapter = new LimAdapter(mDataset);
-        rv.setAdapter(mAdapter);
-*/
-
-
-        //RV-LIST 맵핑 구현해야함 (25일)
-
         // 다이얼로그 뷰 세팅 시작
         final AlertDialog.Builder alertBuilder_add = new AlertDialog.Builder(
                 this);
@@ -64,15 +57,47 @@ public class MainActivity extends AppCompatActivity implements LimContract.View 
         final AlertDialog addDialog = alertBuilder_add.create();
 
         // 다이얼로그 뷰 세팅 끝
+        final HSLColorPicker colorPicker = (HSLColorPicker) findViewById(R.id.colorPicker);
+        colorPicker.setColorSelectionListener(new SimpleColorSelectionListener() {
+            @Override
+            public void onColorSelected(int color) {
+                // Do whatever you want with the color
+                showMessage(Integer.toString(color) + "선택되었습니다");
+                //색상 체인지
+            }
+        });
 
+        // 컴포넌트들 추가 버튼
         btn_map = (ImageButton) addDialogView.findViewById(R.id.btn_map);
         btn_image = (ImageButton) addDialogView.findViewById(R.id.btn_image);
         btn_text = (ImageButton) addDialogView.findViewById(R.id.btn_text);
+        // 컴포넌트 추가버튼 끝
 
+        // TEXT WIDGET 버튼 설정 시작
+        btn_color = (ImageButton) findViewById(R.id.btn_color);
+        btn_bold = (ImageButton) findViewById(R.id.btn_bold);
+        btn_italic = (ImageButton) findViewById(R.id.btn_italic);
+        btn_inc = (ImageButton) findViewById(R.id.btn_inc_size);
+        btn_dec = (ImageButton) findViewById(R.id.btn_dec_size);
+        btn_ul = (ImageButton) findViewById(R.id.btn_ul);
+        // TEXT WIDGET 버튼 설정 끝
+
+        // 저장, 불러오기 컴포넌트추가 버튼
         btn_save = (ImageButton) findViewById(R.id.btn_save);
         btn_load = (ImageButton) findViewById(R.id.btn_load);
         btn_add = (ImageButton) findViewById(R.id.btn_add);
+        // 저장, 불러오기 컴포넌트추가 버튼 끝
+
         btn_titleimage = (ImageButton) findViewById(R.id.btn_titleimage);
+
+        btn_color.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (colorPicker.getVisibility() == View.GONE)
+                    colorPicker.setVisibility(View.VISIBLE);
+                else colorPicker.setVisibility(View.GONE);
+            }
+        });
 
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,8 +128,6 @@ public class MainActivity extends AppCompatActivity implements LimContract.View 
                 addDialog.dismiss(); // 다이얼로그 제거도 Presenter가 해야 되는지 생각해볼 것
 
 
-
-
             }
         });
         btn_image.setOnClickListener(new View.OnClickListener() {
@@ -127,13 +150,20 @@ public class MainActivity extends AppCompatActivity implements LimContract.View 
 
 
     }
+
     public void setAdapter(Post comps) {
         mAdapter = new LimAdapter(comps);
         rv.setAdapter(mAdapter);
+        mAdapter.setTextListener(new LimAdapter.onTextListener() {
+            //@Override
+            public void onTextCallBack(int position, int start, int end) {
+                Toast.makeText(getApplicationContext(), Integer.toString(position) + "번 텍스트 선택 " + Integer.toString(start) + " 부터 " + Integer.toString(end), Toast.LENGTH_SHORT).show();
+
+            }
+        });
     } //Post정보 - 어댑터 - RecyclerView 간 매핑
 
-    public void displayComponent(int index)
-    {
+    public void displayComponent(int index) {
         mAdapter.notifyItemInserted(index);
         //mAdapter.notifyDataSetChanged();
     } //
@@ -180,4 +210,5 @@ public class MainActivity extends AppCompatActivity implements LimContract.View 
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
 
     }
+
 }
