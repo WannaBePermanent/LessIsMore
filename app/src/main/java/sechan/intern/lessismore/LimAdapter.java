@@ -212,7 +212,7 @@ public class LimAdapter extends RecyclerView.Adapter<LimAdapter.ViewHolder> {
         mPresenter.isColor(color);
     }
     public void setIncSize() {
-        preStyle();
+        //preStyle();
         //가져와서 해야함 생각좀해야함
 
     }
