@@ -1,14 +1,16 @@
 package sechan.intern.lessismore;
 
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.madrapps.pikolo.HSLColorPicker;
@@ -17,26 +19,27 @@ import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
 import java.util.ArrayList;
 
 import sechan.intern.lessismore.components.Comp;
-import sechan.intern.lessismore.helpers.Post;
+import sechan.intern.lessismore.components.LimConstant;
 
-import static android.support.v4.util.Preconditions.checkNotNull;
-
-public class MainActivity extends AppCompatActivity implements LimContract.View {
+//public class MainActivity extends AppCompatActivity implements LimContract.View {
+    public class MainActivity extends AppCompatActivity {
     // 액티비티에서 직접 뷰 구현
 
-    private LimContract.Presenter mPresenter;
-/*    private static final int COMP_TEXT = 1;
-    private static final int COMP_IMAGE = 2;
-    private static final int COMP_IMAGES = 3;
-    private static final int COMP_MAP = 4;*/
-
+    //private LimContract.Presenter mPresenter;
+    private LimPresenter mPresenter;
     ArrayList<String> mDataset;
     RecyclerView rv;
     LimAdapter mAdapter;
+    LimEditText edit_focus;
+    Spannable span;
+    int text_start;
+    int text_end;
+    LinearLayout ll_textWidget;
     ImageButton btn_save, btn_load, btn_add;
     ImageButton btn_text, btn_image, btn_map;
     ImageButton btn_titleimage;
     ImageButton btn_inc, btn_dec, btn_bold, btn_italic, btn_color, btn_ul;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +64,13 @@ public class MainActivity extends AppCompatActivity implements LimContract.View 
         colorPicker.setColorSelectionListener(new SimpleColorSelectionListener() {
             @Override
             public void onColorSelected(int color) {
-                // Do whatever you want with the color
-                showMessage(Integer.toString(color) + "선택되었습니다");
+                //showMessage(Integer.toString(color) + "선택되었습니다");
+                mPresenter.setStyle(LimConstant.TEXTCOLOR,color);
                 //색상 체인지
             }
         });
+        ll_textWidget = (LinearLayout)findViewById(R.id.ll_textwidget);
+        ll_textWidget.setVisibility(View.GONE);
 
         // 컴포넌트들 추가 버튼
         btn_map = (ImageButton) addDialogView.findViewById(R.id.btn_map);
@@ -98,6 +103,43 @@ public class MainActivity extends AppCompatActivity implements LimContract.View 
                 else colorPicker.setVisibility(View.GONE);
             }
         });
+
+        btn_bold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            mPresenter.setStyle(LimConstant.TEXTBOLD);
+
+            }
+        });
+        btn_italic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.setStyle(LimConstant.TEXTITALIC);
+            }
+        });
+        btn_ul.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.setStyle(LimConstant.TEXTUNDERLINE);
+            }
+        });
+
+
+        btn_inc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.setStyle(LimConstant.TEXTINCSIZE);
+            }
+        });
+        btn_dec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.setStyle(LimConstant.TEXTDECSIZE);
+            }
+        });
+
+
+
 
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,16 +193,23 @@ public class MainActivity extends AppCompatActivity implements LimContract.View 
 
     }
 
-    public void setAdapter(Post comps) {
-        mAdapter = new LimAdapter(comps);
+    public void setAdapter(LimAdapter adapter) {
+        mAdapter = adapter;
         rv.setAdapter(mAdapter);
-        mAdapter.setTextListener(new LimAdapter.onTextListener() {
+
+
+/*        mAdapter.setTextListener(new LimAdapter.onTextListener() {
             //@Override
-            public void onTextCallBack(int position, int start, int end) {
+            public void onTextCallBack(LimEditText lte, int position, int start, int end) {
+                edit_focus = lte;
+                span = lte.getText();
+                text_start = start;
+                text_end = end;
                 Toast.makeText(getApplicationContext(), Integer.toString(position) + "번 텍스트 선택 " + Integer.toString(start) + " 부터 " + Integer.toString(end), Toast.LENGTH_SHORT).show();
 
             }
-        });
+        });*/
+
     } //Post정보 - 어댑터 - RecyclerView 간 매핑
 
     public void displayComponent(int index) {
@@ -184,10 +233,12 @@ public class MainActivity extends AppCompatActivity implements LimContract.View 
 
     } // 삭제는 인덱스만 필요함
 
-    public void setPresenter(@NonNull LimContract.Presenter presenter) {
+    /*public void setPresenter(@NonNull LimContract.Presenter presenter) {
         mPresenter = checkNotNull(presenter);
+    }*/
+    public void setPresenter(LimPresenter presenter) {
+        mPresenter = presenter;
     }
-
     public void displayTitleBackground(Comp img) {
 
     }
@@ -208,6 +259,53 @@ public class MainActivity extends AppCompatActivity implements LimContract.View 
 
     public void showMessage(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void setStyle() {
+        if (!edit_focus.hasSelection()) {
+            edit_focus.getText().insert(edit_focus.getSelectionStart(), " ");
+            edit_focus.setSelection(edit_focus.getSelectionStart() - 1, edit_focus.getSelectionStart());
+        }
+
+
+    }
+
+    public void setFocused(int pos, int category2, int start, int end) {
+
+
+    }
+    public void setBtn(int style) {
+
+
+        switch (style) {
+            case LimConstant.TEXTBOLD:
+                btn_bold.setColorFilter(Color.GREEN);
+                break;
+            case LimConstant.TEXTITALIC:
+                btn_italic.setColorFilter(Color.GREEN);
+                break;
+            case LimConstant.TEXTUNDERLINE:
+                btn_ul.setColorFilter(Color.GREEN);
+                break;
+
+        }
+
+    }
+    public void setBtn(int style, int color) {
+        btn_color.setColorFilter(color);
+
+    }
+    public void clearBtn(){
+        btn_bold.clearColorFilter();
+        btn_italic.clearColorFilter();
+        btn_ul.clearColorFilter();
+        btn_color.clearColorFilter();
+    }
+    public void showTextWidget(boolean show){
+        if (show) ll_textWidget.setVisibility(View.VISIBLE);
+        else ll_textWidget.setVisibility(View.GONE);
+
 
     }
 

@@ -12,10 +12,10 @@ import sechan.intern.lessismore.util.BaseView;
 
 
 public interface LimContract {
-    public final static int COMP_TEXT=1;
+/*    public final static int COMP_TEXT=1;
     public final static int COMP_IMAGE=2;
     public final static int COMP_IMAGES=3;
-    public final static int COMP_MAP=4;
+    public final static int COMP_MAP=4;*/
 
     interface View extends BaseView<Presenter> {
 
@@ -33,7 +33,7 @@ public interface LimContract {
 
        void showHelperLoaded(boolean loaded);
         void showMessage(String message);
-        void setAdapter(Post post);
+        void setAdapter(LimAdapter adapter);
         void displayComponent();
     }
 
@@ -45,6 +45,8 @@ public interface LimContract {
 
 
        int addCompText();
+        void setStyle(int style);
+        void setStyle(int style, int color);
         //int addCompText(int index);
         //int addCompImage();
         int addCompImage(String s);

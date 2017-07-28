@@ -1,12 +1,12 @@
 package sechan.intern.lessismore.components;
 
 
-import static sechan.intern.lessismore.LimContract.COMP_IMAGE;
+import static sechan.intern.lessismore.components.LimConstant.COMP_IMAGE;
 
 public class CompImage extends Comp {
     String imagePath;
     public CompImage(String imagePath){
-        Category=COMP_IMAGE;
+        category =COMP_IMAGE;
         this.imagePath=imagePath;
     }
 
