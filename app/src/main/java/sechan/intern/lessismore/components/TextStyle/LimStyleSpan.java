@@ -8,8 +8,8 @@ import android.text.style.StyleSpan;
 @SuppressLint("ParcelCreator")
 public class LimStyleSpan extends StyleSpan {
 
-    int start;
-    int end;
+    public int start;
+    public int end;
 
 
     public LimStyleSpan(int style) {

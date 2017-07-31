@@ -13,18 +13,14 @@ import sechan.intern.lessismore.helpers.Post;
 
 
 //public class LimPresenter implements LimContract.Presenter {
-public class LimPresenter  {
+public class LimPresenter {
 
     //Singleton Pattern
     private final LimRepo mRepo;
-    //private final LimContract.View mView;
+
     private final MainActivity mView;
     private LimAdapter mAdapter;
-    private int text_start, text_end;
-    private int focus;
-    private int category;
-    //private int[] getFocus = new int[4];
-    //private static final ArrayList<Comp> compOrder = new ArrayList<>();
+
 
     public LimPresenter(@NonNull LimRepo repo,
                         @NonNull MainActivity view) {
@@ -40,34 +36,28 @@ public class LimPresenter  {
         mAdapter = new LimAdapter(mRepo.getPost());
         mView.setAdapter(mAdapter);
         mAdapter.setPresenter(this);
+        mAdapter.setContext(mView.getApplicationContext());
 
     }
 
-    /*    public int addCompText() {
-            // mRepo.savePostInstance(); 먼저 상태 저장해야함
-            if (mRepo.addCompText() == 1) {
-                mView.showMessage("텍스트 추가");
-                mView.displayComponent();
-            }
-            return 0;
-        }*/
     public int addCompText() {
         // mRepo.savePostInstance(); 먼저 상태 저장해야함
-        // index 규약 추후 수정
-        int rv = mRepo.addCompText();
-        if (rv >= 0) {
+
+        int ret = mRepo.addCompText();
+        if (ret >= 0) {
             mView.showMessage("텍스트 추가");
-            mView.displayComponent(rv);
+            mAdapter.notifyItemInserted(ret);
         }
         return -1;
     }
 
     public int addCompImage(String imagePath) {
-        if (mRepo.addCompImage(imagePath) == 1) {
+        int ret = mRepo.addCompImage((imagePath));
+        if (ret >= 0) {
             mView.showMessage("이미지 추가");
-            mView.displayComponent();
+            mAdapter.notifyItemInserted(ret);
         }
-        return 0;
+        return -1;
     }
 
     public int addCompImages() {
@@ -126,8 +116,8 @@ public class LimPresenter  {
     }
 
 
-    public void setStyle(int style){
-        switch(style){
+    public void setStyle(int style) {
+        switch (style) {
             case LimConstant.TEXTBOLD:
                 mAdapter.setBold();
                 break;
@@ -138,57 +128,40 @@ public class LimPresenter  {
                 mAdapter.setUnderline();
                 break;
             case LimConstant.TEXTINCSIZE:
-                mAdapter.setIncSize();
+                mAdapter.setTextSize(true);
                 break;
             case LimConstant.TEXTDECSIZE:
-                mAdapter.setDecSize();
+                mAdapter.setTextSize(false);
                 break;
         }
     }
-    public void setStyle(int style, int color){
+
+    public void setStyle(int style, int color) {
         mAdapter.setColor(color);
     }
-    public void isBold(){
-        mView.setBtn(LimConstant.TEXTBOLD);
+
+    public void isBold(boolean b) {
+        mView.setBtn(LimConstant.TEXTBOLD, b);
     }
-    public void isItalic(){
-        mView.setBtn(LimConstant.TEXTITALIC);
+
+    public void isItalic(boolean b) {
+        mView.setBtn(LimConstant.TEXTITALIC, b);
     }
-    public void isUnderLine(){
-        mView.setBtn(LimConstant.TEXTUNDERLINE);
+
+    public void isUnderLine(boolean b) {
+        mView.setBtn(LimConstant.TEXTUNDERLINE, b);
     }
-    public void isColor(int color){
-        mView.setBtn(LimConstant.TEXTCOLOR,color);
+
+    public void isColor(int color) {
+        mView.setBtn(LimConstant.TEXTCOLOR, color);
     }
-    public void clearStyleCheck(){
+
+    public void clearStyleCheck() {
         mView.clearBtn();
     }
-    public void textFocus(boolean focus){
+
+    public void textFocus(boolean focus) {
         mView.showTextWidget(focus);
     }
 
-/*    public void setFocused(int position, int comp, int start, int end) {
-        focus = position;
-        category = comp;
-        text_start = start;
-        text_end = end;
-
-    }*/
-/*
-    public int getFocused() {
-
-        return focus;
-    }
-
-    public int getCategory() {
-    return category;
-
-    }
-    public int getText_start(){
-        return text_start;
-    }
-    public int getText_end(){
-
-        return text_end;
-    }*/
 }

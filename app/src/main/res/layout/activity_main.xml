@@ -50,7 +50,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/layout_border"
             android:orientation="horizontal"
-
+            android:visibility="gone"
             >
 
 
@@ -138,14 +138,31 @@
                 android:scaleType="centerInside"
                 app:srcCompat="@drawable/icon_color" />
         </LinearLayout>
-
+<LinearLayout
+    android:id="@+id/llColorPicker"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="gone"
+    >
         <com.madrapps.pikolo.HSLColorPicker
             android:id="@+id/colorPicker"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_weight="1"
-            android:visibility="gone" />
+             />
 
+    <ImageButton
+        android:id="@+id/btnColorOK"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:srcCompat="@drawable/icon_confirm"
+        android:adjustViewBounds="true"
+        android:background="?android:selectableItemBackground"
+        android:scaleType="centerInside"
+        android:layout_gravity="center_horizontal"
+        />
+</LinearLayout>
     </LinearLayout>
 
 

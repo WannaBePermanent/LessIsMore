@@ -30,7 +30,6 @@ public class LimEditText extends android.support.v7.widget.AppCompatEditText {
     }
     @Override
     protected void onSelectionChanged(int selStart, int selEnd) {
-        // Toast.makeText(getContext(),"텍스트 선택" + Integer.toString(selStart) + " 부터 " + Integer.toString(selEnd), Toast.LENGTH_SHORT).show();
         super.onSelectionChanged(selStart, selEnd);
         if(listeners!=null)    listeners.onSelectionChanged(selStart,selEnd);
     }

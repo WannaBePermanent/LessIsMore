@@ -10,7 +10,8 @@ import android.text.style.AbsoluteSizeSpan;
 
 @SuppressLint("ParcelCreator")
 public class LimAbsoluteSizeSpan extends AbsoluteSizeSpan {
-
+    public int start;
+    public int end;
     public LimAbsoluteSizeSpan(int size) {
         super(size);
     }
