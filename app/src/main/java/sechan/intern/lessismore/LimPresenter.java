@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import java.util.Date;
 
-import sechan.intern.lessismore.components.Comp;
 import sechan.intern.lessismore.components.CompImage;
 import sechan.intern.lessismore.components.CompImages;
 import sechan.intern.lessismore.components.CompText;
@@ -70,8 +69,13 @@ public class LimPresenter {
         return 0;
     }
 
-    public Post deleteComp(Comp comp) {
-        return null;
+    public void removeComp(){
+        int position = mAdapter.getPosition();
+        if (position >= 0) {
+            mRepo.getPost().remove(position);
+            mAdapter.deleteComp();
+            mView.showRemoveButton(false);
+        }
     }
 
     public Post updateComp(CompText comp) {
@@ -95,6 +99,22 @@ public class LimPresenter {
         return false;
 
     } //저장
+    public boolean save() {
+    mAdapter.saveText();
+        return false;
+    } //저장
+    public void saveTextStyle(int position, int type, int start, int end, int attr){
+        mRepo.getCompText(position).saveTextStyle(type,start,end,attr);
+        //mRepo.saveTextStyle(position, type,start,end,attr);
+
+    }
+    public void saveTextStyle(int position, int type, int start, int end){
+        mRepo.getCompText(position).saveTextStyle(type,start,end);
+        //mRepo.saveTextStyle(position, type,start,end);
+    }
+    public void saveText(int position, String str){
+        mRepo.getCompText(position).saveText(str);
+    }
 
     public Post load(int index) {
         return null;
@@ -110,7 +130,8 @@ public class LimPresenter {
 
     }
 
-    public void setFocused(int position, int comp) {
+    public void setFocused(int position) {
+        mView.showRemoveButton(true);
 
 
     }
@@ -164,4 +185,7 @@ public class LimPresenter {
         mView.showTextWidget(focus);
     }
 
+    public void showMessage(String str){
+        mView.showMessage(str);
+    }
 }

@@ -2,7 +2,6 @@ package sechan.intern.lessismore;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     // 액티비티에서 직접 뷰 구현
 
     //private LimContract.Presenter mPresenter;
+    private static final int cGreen = -16726212; // 네이버 녹색상
     private LimPresenter mPresenter;
 
     RecyclerView rv;
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     static final int REQ_CODE_SELECT_IMAGE = 100;
     //boolean currentBold = false, currentItalic = false, currentUnderline = false;
     LinearLayout llTextWidget, llColorPicker;
-    ImageButton btnSave, btnLoad, btnAdd;
+    ImageButton btnSave, btnLoad, btnAdd, btnDelComp;
     ImageButton btnText, btnImage, btnMap;
     ImageButton btnTitleImage;
     ImageButton btnInc, btnDec, btnBold, btnItalic, btnColor, btnUl;
@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         btnSave = (ImageButton) findViewById(R.id.btn_save);
         btnLoad = (ImageButton) findViewById(R.id.btn_load);
         btnAdd = (ImageButton) findViewById(R.id.btn_add);
+        btnDelComp = (ImageButton) findViewById(R.id.btn_deletecomp);
         // 저장, 불러오기 컴포넌트추가 버튼 끝
 
         btnTitleImage = (ImageButton) findViewById(R.id.btn_titleimage);
@@ -152,6 +153,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //mPresenter.save();
+                mPresenter.save();
+
+
+
+            }
+        });
+        btnDelComp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //mPresenter.save();
+                mPresenter.removeComp();
+
+
+
             }
         });
         btnLoad.setOnClickListener(new View.OnClickListener() {
@@ -267,21 +282,21 @@ public class MainActivity extends AppCompatActivity {
         switch (style) {
             case LimConstant.TEXTBOLD:
                 if (b)
-                    btnBold.setColorFilter(Color.GREEN);
+                    btnBold.setColorFilter(cGreen);
                 else btnBold.clearColorFilter();
 
 
                 break;
             case LimConstant.TEXTITALIC:
                 if (b)
-                    btnItalic.setColorFilter(Color.GREEN);
+                    btnItalic.setColorFilter(cGreen);
                 else
                     btnItalic.clearColorFilter();
 
                 break;
             case LimConstant.TEXTUNDERLINE:
                 if (b)
-                    btnUl.setColorFilter(Color.GREEN);
+                    btnUl.setColorFilter(cGreen);
                 else
                     btnUl.clearColorFilter();
                 break;
@@ -289,7 +304,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
+    public void showRemoveButton(boolean b){
+        if (b) btnDelComp.setVisibility(View.VISIBLE);
+        else btnDelComp.setVisibility(View.INVISIBLE);
+    }
     public void setBtn(int style, int color) {
         btnColor.setColorFilter(color);
     }
@@ -314,6 +332,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQ_CODE_SELECT_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
+
                     mPresenter.addCompImage(data.getDataString());
 
                 } catch (Exception e) {

@@ -11,6 +11,7 @@ public class LimConstant {
     public static final int TEXTCOLOR=4;
     public static final int TEXTINCSIZE=5;
     public static final int TEXTDECSIZE=6;
+    public static final int TEXTSIZE = 7;
     public static final int COMP_TEXT = 1;
     public static final int COMP_IMAGE = 2;
     public static final int COMP_IMAGES = 3;

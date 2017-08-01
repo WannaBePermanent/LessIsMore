@@ -1,30 +1,25 @@
 package sechan.intern.lessismore.components;
 
-import sechan.intern.lessismore.components.TextStyle.LimAbsoluteSizeSpan;
-import sechan.intern.lessismore.components.TextStyle.LimForegroundColorSpan;
-import sechan.intern.lessismore.components.TextStyle.LimStyleSpan;
-import sechan.intern.lessismore.components.TextStyle.LimUnderlineSpan;
+
+import java.util.ArrayList;
+
+import sechan.intern.lessismore.components.TextStyle.LimTextStyle;
 
 import static sechan.intern.lessismore.components.LimConstant.COMP_TEXT;
 
 public class CompText extends Comp {
     String text;
-
+    ArrayList<LimTextStyle> textStyles = new ArrayList<>();
 /*
     ArrayList<LimStyleSpan> ss = new ArrayList<>();
     ArrayList<LimUnderlineSpan> us = new ArrayList<>();
     ArrayList<LimForegroundColorSpan> fs = new ArrayList<>();
     ArrayList<LimAbsoluteSizeSpan> as = new ArrayList<>();
-*/
-    LimStyleSpan[] ss;
+        LimStyleSpan[] ss;
     LimUnderlineSpan[] us;
     LimForegroundColorSpan[] fs;
     LimAbsoluteSizeSpan[] as;
-
-    public CompText() {
-        category = COMP_TEXT;
-    }
-    public void setStyleSpan(LimStyleSpan[] lss){
+   public void setStyleSpan(LimStyleSpan[] lss){
         ss=lss;
     }
     public void setUnderlineSpan(LimUnderlineSpan[] lus){
@@ -35,9 +30,21 @@ public class CompText extends Comp {
     }
     public void setAbsoluteSizeSpan (LimAbsoluteSizeSpan[] lass){
         as=lass;
+    }*/
+    public CompText() {
+        category = COMP_TEXT;
     }
 
+    public void saveTextStyle(int type, int start, int end){
+        textStyles.add(new LimTextStyle(type,start,end));
+    }
+    public void saveTextStyle(int type, int start, int end, int attr){
+        textStyles.add(new LimTextStyle(type,start,end,attr));
 
+    }
+    public void saveText(String str){
+        this.text = str;
+    }
   /*  List<Style> style;
 
     void setStyle(int start, int end, int attributes, int mode) {// mode 1 = Color, 2 = Size, 3 = Bold, 4 = Italic, 5 = Underline

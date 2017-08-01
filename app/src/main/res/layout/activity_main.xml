@@ -5,7 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="sechan.intern.lessismore.MainActivity">
+    tools:context="sechan.intern.lessismore.MainActivity"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +22,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/layout_border"
-
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
 
             android:orientation="horizontal"
             android:weightSum="1">
@@ -51,6 +56,8 @@
             android:background="@drawable/layout_border"
             android:orientation="horizontal"
             android:visibility="gone"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
             >
 
 
@@ -180,7 +187,8 @@
             android:layout_height="300dp"
             android:layout_weight="1"
             android:scrollbars="vertical"
-
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
             />
 
         <LinearLayout
@@ -229,6 +237,22 @@
                 android:layout_weight="1" />
 
             <ImageButton
+                android:id="@+id/btn_deletecomp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:adjustViewBounds="true"
+                android:background="?android:selectableItemBackground"
+                android:drawablePadding="4dp"
+                android:scaleType="centerInside"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/icon_delete"
+
+                />
+
+            <ImageButton
                 android:id="@+id/btn_add"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
@@ -239,7 +263,7 @@
                 android:background="?android:selectableItemBackground"
                 android:drawablePadding="4dp"
                 android:scaleType="centerInside"
-                android:text="컴포넌트 추가"
+
                 app:srcCompat="@drawable/icon_add" />
         </LinearLayout>
     </LinearLayout>

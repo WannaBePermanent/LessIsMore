@@ -1,7 +1,9 @@
 package sechan.intern.lessismore;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.Spanned;
@@ -12,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
 
 import sechan.intern.lessismore.components.CompImage;
 import sechan.intern.lessismore.components.LimConstant;
@@ -30,12 +34,14 @@ public class LimAdapter extends RecyclerView.Adapter<LimAdapter.ViewHolder> {
     private LimAbsoluteSizeSpan spanS = null;
     private Context mContext = null;
     private LimPresenter mPresenter = null;
-    private LimEditText currentEdit;
-    private int textSize = -1;
-    private int start;
-    private int end;
-    private Spannable span;
-
+    private LimEditText mEdit;
+    private int mTextSize = -1;
+    private int mStart;
+    private static final GradientDrawable mGrad = new GradientDrawable();
+    private int mEnd;
+    private int mPosition = -1;
+    private Spannable mSpan;
+    private ArrayList<View> mList = new ArrayList<>();
     // Adapter - Presenter 형으로 바꿈
 
     private Post mPost;
@@ -49,7 +55,13 @@ public class LimAdapter extends RecyclerView.Adapter<LimAdapter.ViewHolder> {
     }
 
     public LimAdapter(Post post) {
-        mPost = post; // getItemCount 베이스 구현자체에서 수량 가져와서 돌림
+        mPost = post;
+        mGrad.setCornerRadius(10);
+        mGrad.setStroke(4, Color.parseColor("#00C73C"));
+        mGrad.setShape(GradientDrawable.RECTANGLE);
+
+
+        // getItemCount 베이스 구현자체에서 수량 가져와서 돌림
     }
 
     @Override
@@ -72,19 +84,23 @@ public class LimAdapter extends RecyclerView.Adapter<LimAdapter.ViewHolder> {
         switch (mPost.get(position).category) {
             case LimConstant.COMP_TEXT:
                 ll_view.addView(holder.editComp);
+                mList.add(position, holder.editComp);
                 lt = holder.editComp;
-                textSize = (int) lt.getTextSize();
+                mTextSize = (int) lt.getTextSize();
                 lt.setText(Integer.toString(position));
+                //setOnClick(holder.editComp, position);
                 lt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                     @Override
                     public void onFocusChange(View view, boolean hasFocus) {
                         if (hasFocus) {
-                            start = lt.getSelectionStart();
-                            end = lt.getSelectionEnd();
-                            currentEdit = lt;
-                            span = lt.getText();
+                            mStart = lt.getSelectionStart();
+                            mEnd = lt.getSelectionEnd();
+                            mEdit = lt;
+                            mSpan = lt.getText();
                             getStyle();
                             mPresenter.textFocus(true);
+                            mPosition = position;
+                            hasFocused(position);
                         } else mPresenter.textFocus(false);
 
                     }
@@ -93,10 +109,10 @@ public class LimAdapter extends RecyclerView.Adapter<LimAdapter.ViewHolder> {
                 ) {
                     @Override
                     public void onSelectionChanged(int selStart, int selEnd) {
-                        start = selStart;
-                        end = selEnd;
-                        currentEdit = lt;
-                        if (span == null) span = currentEdit.getText();
+                        mStart = selStart;
+                        mEnd = selEnd;
+                        mEdit = lt;
+                        if (mSpan == null) mSpan = mEdit.getText();
                         if (!doSpace) getStyle(); //셀렉션 한칸 넣는 작업 때는 검사 안함
 
                     }
@@ -108,7 +124,11 @@ public class LimAdapter extends RecyclerView.Adapter<LimAdapter.ViewHolder> {
                 break;
             case LimConstant.COMP_IMAGE:
                 ll_view.addView(holder.ivComp);
+                mList.add(position, holder.ivComp);
                 Glide.with(mContext).load(((CompImage) mPost.get(position)).ImagePath()).into((ImageView) holder.ivComp);
+                setOnClick(holder.ivComp, position);
+                break;
+            case LimConstant.COMP_MAP:
                 break;
 
         }
@@ -137,25 +157,105 @@ public class LimAdapter extends RecyclerView.Adapter<LimAdapter.ViewHolder> {
         }
     }
 
+
+    public void setOnClick(final View v, final int position) {
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPosition = position;
+                hasFocused(position);
+                mPresenter.showMessage(Integer.toString(mPosition));
+            }
+        });
+
+    }
+
+    public void saveText() {
+        for (int viewIndex = 0; viewIndex < mList.size(); viewIndex++) {
+            if (mList.get(viewIndex).toString().equals("LimEditText")) {
+                LimEditText tempEdit = (LimEditText) mList.get(viewIndex);
+                Spannable tempSpan = tempEdit.getText();
+                mPresenter.saveText(viewIndex, tempEdit.getText().toString());
+                LimStyleSpan ss[] = tempSpan.getSpans(0, tempSpan.length() - 1, LimStyleSpan.class);
+                LimUnderlineSpan us[] = tempSpan.getSpans(0, tempSpan.length() - 1, LimUnderlineSpan.class);
+                LimForegroundColorSpan fs[] = tempSpan.getSpans(0, tempSpan.length() - 1, LimForegroundColorSpan.class);
+                LimAbsoluteSizeSpan as[] = tempSpan.getSpans(0, tempSpan.length() - 1, LimAbsoluteSizeSpan.class);
+                for (LimStyleSpan s : ss) {
+                    s.start = tempSpan.getSpanStart(s);
+                    s.end = tempSpan.getSpanEnd(s);
+                    mPresenter.saveTextStyle(viewIndex, s.getStyle(), s.start, s.end);
+
+                }
+                for (LimUnderlineSpan u : us) {
+                    u.start = tempSpan.getSpanStart(u);
+                    u.end = tempSpan.getSpanEnd(u);
+                    mPresenter.saveTextStyle(viewIndex, LimConstant.TEXTUNDERLINE, u.start, u.end);
+                }
+                for (LimForegroundColorSpan f : fs) {
+                    f.start = tempSpan.getSpanStart(f);
+                    f.end = tempSpan.getSpanEnd(f);
+                    mPresenter.saveTextStyle(viewIndex, LimConstant.TEXTCOLOR, f.start, f.end, f.getForegroundColor());
+                }
+                for (LimAbsoluteSizeSpan a : as) {
+                    a.start = tempSpan.getSpanStart(a);
+                    a.end = tempSpan.getSpanEnd(a);
+                    mPresenter.saveTextStyle(viewIndex, LimConstant.TEXTSIZE, a.start, a.end, a.getSize());
+                }
+
+            }
+
+        }
+    }
+
+    public void deleteComp() {
+        mList.remove(mPosition);
+        notifyItemRemoved(mPosition);
+        mPosition = -1;
+
+
+    }
+
+    public int getPosition() {
+        return mPosition;
+    }
+
+    private void hasFocused(int position) {
+        mPresenter.setFocused(position);
+        for (int viewIndex = 0; viewIndex < mList.size(); viewIndex++) {
+            View v = mList.get(viewIndex);
+            if (position == viewIndex) v.setBackground(mGrad);
+            else {
+                v.setBackground(null);
+                v.clearFocus();
+            }
+
+        }
+    }
+
+
+
+
+    // =====이하로 텍스트 스타일 지정, 가져오기
+
     public void setBold() {
 
         if (spanB == null) {
             preStyle();
             spanB = new LimStyleSpan(Typeface.BOLD);
-            span.setSpan(spanB,
-                    start, end,
+            mSpan.setSpan(spanB,
+                    mStart, mEnd,
                     Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
             mPresenter.isBold(true);
         } else {
-            span.removeSpan(spanB);
+            mSpan.removeSpan(spanB);
             int end2 = spanB.end;
             if (preStyle()) end2++; //공백을 만들어주면 기존 텍스트가 중간 기준으로 한칸 밀리므로 바꿔줘야한다
-            //span.setSpan(spanB,spanB.start,spanB.end, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-            if (spanB.start <= start && start <= spanB.end) {
-                span.setSpan(new LimStyleSpan(Typeface.BOLD), spanB.start, start, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            //mSpan.setSpan(spanB,spanB.mStart,spanB.mEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            if (spanB.start <= mStart && mStart <= spanB.end) {
+                mSpan.setSpan(new LimStyleSpan(Typeface.BOLD), spanB.start, mStart, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             }
-            if (spanB.start <= end && end <= spanB.end) {
-                span.setSpan(new LimStyleSpan(Typeface.BOLD), end, end2, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            if (spanB.start <= mEnd && mEnd <= spanB.end) {
+                mSpan.setSpan(new LimStyleSpan(Typeface.BOLD), mEnd, end2, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             } //쪼개서 스펜넣기
             mPresenter.isBold(false);
             spanB = null;
@@ -169,19 +269,19 @@ public class LimAdapter extends RecyclerView.Adapter<LimAdapter.ViewHolder> {
         if (spanI == null) {
             spanI = new LimStyleSpan(Typeface.ITALIC);
             preStyle();
-            span.setSpan(spanI,
-                    start, end,
+            mSpan.setSpan(spanI,
+                    mStart, mEnd,
                     Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
             mPresenter.isItalic(true);
         } else {
-            span.removeSpan(spanI);
+            mSpan.removeSpan(spanI);
             int end2 = spanI.end;
             if (preStyle()) end2++; //공백을 만들어주면 기존 텍스트가 중간 기준으로 한칸 밀리므로 바꿔줘야한다
-            if (spanI.start <= start && start <= spanI.end) {
-                span.setSpan(new LimStyleSpan(Typeface.ITALIC), spanI.start, start, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            if (spanI.start <= mStart && mStart <= spanI.end) {
+                mSpan.setSpan(new LimStyleSpan(Typeface.ITALIC), spanI.start, mStart, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             }
-            if (spanI.start <= end && end <= spanI.end) {
-                span.setSpan(new LimStyleSpan(Typeface.ITALIC), end, end2, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            if (spanI.start <= mEnd && mEnd <= spanI.end) {
+                mSpan.setSpan(new LimStyleSpan(Typeface.ITALIC), mEnd, end2, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             }
             mPresenter.isItalic(false);
             spanI = null;
@@ -192,21 +292,21 @@ public class LimAdapter extends RecyclerView.Adapter<LimAdapter.ViewHolder> {
         if (spanU == null) {
             preStyle();
             spanU = new LimUnderlineSpan();
-            span.setSpan(spanU,
-                    start, end,
+            mSpan.setSpan(spanU,
+                    mStart, mEnd,
                     Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
             mPresenter.isUnderLine(true);
         } else {
-            span.removeSpan(spanU);
+            mSpan.removeSpan(spanU);
             int end2 = spanU.end;
             if (preStyle()) end2++; //공백을 만들어주면 기존 텍스트가 중간 기준으로 한칸 밀리므로 바꿔줘야한다
-            if (spanU.start <= start && start <= spanU.end) {
-                span.setSpan(new LimUnderlineSpan(), spanU.start, start, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            if (spanU.start <= mStart && mStart <= spanU.end) {
+                mSpan.setSpan(new LimUnderlineSpan(), spanU.start, mStart, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             }
-            if (spanU.start <= end && end <= spanU.end) {
-                span.setSpan(new LimUnderlineSpan(), end, end2, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            if (spanU.start <= mEnd && mEnd <= spanU.end) {
+                mSpan.setSpan(new LimUnderlineSpan(), mEnd, end2, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             }
-            mPresenter.isItalic(false);
+            mPresenter.isUnderLine(false);
             spanU = null;
         }
     }
@@ -215,21 +315,21 @@ public class LimAdapter extends RecyclerView.Adapter<LimAdapter.ViewHolder> {
         if (spanC == null) {
             preStyle();
             spanC = new LimForegroundColorSpan(color);
-            span.setSpan(spanC,
-                    start, end,
+            mSpan.setSpan(spanC,
+                    mStart, mEnd,
                     Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
         } else {
-            span.removeSpan(spanC);
+            mSpan.removeSpan(spanC);
             int end2 = spanC.end;
             if (preStyle()) end2++; //공백을 만들어주면 기존 텍스트가 중간 기준으로 한칸 밀리므로 바꿔줘야한다
-            if (spanC.start <= start && start <= spanC.end) {
-                span.setSpan(new LimForegroundColorSpan(spanC.getForegroundColor()), spanC.start, start, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            if (spanC.start <= mStart && mStart <= spanC.end) {
+                mSpan.setSpan(new LimForegroundColorSpan(spanC.getForegroundColor()), spanC.start, mStart, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             }
-            if (spanC.start <= end && end <= spanC.end) {
-                span.setSpan(new LimForegroundColorSpan(spanC.getForegroundColor()), end, end2, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            if (spanC.start <= mEnd && mEnd <= spanC.end) {
+                mSpan.setSpan(new LimForegroundColorSpan(spanC.getForegroundColor()), mEnd, end2, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             }
-            span.setSpan(new LimForegroundColorSpan(color),
-                    start, end,
+            mSpan.setSpan(new LimForegroundColorSpan(color),
+                    mStart, mEnd,
                     Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
         }
         mPresenter.isColor(color);
@@ -238,26 +338,26 @@ public class LimAdapter extends RecyclerView.Adapter<LimAdapter.ViewHolder> {
     public void setTextSize(boolean inc) {
         if (spanS == null) {
             preStyle();
-            if (inc) spanS = new LimAbsoluteSizeSpan(textSize + 5);
-            else spanS = new LimAbsoluteSizeSpan(textSize - 5);
-            span.setSpan(spanS,
-                    start, end,
+            if (inc) spanS = new LimAbsoluteSizeSpan(mTextSize + 5);
+            else spanS = new LimAbsoluteSizeSpan(mTextSize - 5);
+            mSpan.setSpan(spanS,
+                    mStart, mEnd,
                     Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
         } else {
-            span.removeSpan(spanS);
+            mSpan.removeSpan(spanS);
             int end2 = spanS.end;
             int textSize2 = spanS.getSize();
             if (preStyle()) end2++; //공백을 만들어주면 기존 텍스트가 중간 기준으로 한칸 밀리므로 바꿔줘야한다
-            if (spanS.start <= start && start <= spanS.end) {
-                span.setSpan(new LimAbsoluteSizeSpan(spanS.getSize()), spanS.start, start, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            if (spanS.start <= mStart && mStart <= spanS.end) {
+                mSpan.setSpan(new LimAbsoluteSizeSpan(spanS.getSize()), spanS.start, mStart, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             }
-            if (spanS.start <= end && end <= spanS.end) {
-                span.setSpan(new LimAbsoluteSizeSpan(spanS.getSize()), end, end2, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            if (spanS.start <= mEnd && mEnd <= spanS.end) {
+                mSpan.setSpan(new LimAbsoluteSizeSpan(spanS.getSize()), mEnd, end2, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             }
             if (inc) spanS = new LimAbsoluteSizeSpan(textSize2 + 5);
             else spanS = new LimAbsoluteSizeSpan(textSize2 - 5);
-            span.setSpan(spanS,
-                    start, end,
+            mSpan.setSpan(spanS,
+                    mStart, mEnd,
                     Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
 
         }
@@ -267,10 +367,10 @@ public class LimAdapter extends RecyclerView.Adapter<LimAdapter.ViewHolder> {
 
     private boolean preStyle() { // 공백 생성후 선택
 
-        if (!currentEdit.hasSelection()) {
+        if (!mEdit.hasSelection()) {
             doSpace = true;
-            currentEdit.getText().insert(currentEdit.getSelectionStart(), " ");
-            currentEdit.setSelection(currentEdit.getSelectionStart() - 1, currentEdit.getSelectionStart());
+            mEdit.getText().insert(mEdit.getSelectionStart(), " ");
+            mEdit.setSelection(mEdit.getSelectionStart() - 1, mEdit.getSelectionStart());
             doSpace = false;
             return true;
         }
@@ -278,51 +378,51 @@ public class LimAdapter extends RecyclerView.Adapter<LimAdapter.ViewHolder> {
     }
 
     private void getStyle() {
-        LimStyleSpan ss[] = span.getSpans(start, end, LimStyleSpan.class);
-        LimUnderlineSpan us[] = span.getSpans(start, end, LimUnderlineSpan.class);
-        LimForegroundColorSpan fs[] = span.getSpans(start, end, LimForegroundColorSpan.class);
-        LimAbsoluteSizeSpan as[] = span.getSpans(start, end, LimAbsoluteSizeSpan.class);
+        LimStyleSpan ss[] = mSpan.getSpans(mStart, mEnd, LimStyleSpan.class);
+        LimUnderlineSpan us[] = mSpan.getSpans(mStart, mEnd, LimUnderlineSpan.class);
+        LimForegroundColorSpan fs[] = mSpan.getSpans(mStart, mEnd, LimForegroundColorSpan.class);
+        LimAbsoluteSizeSpan as[] = mSpan.getSpans(mStart, mEnd, LimAbsoluteSizeSpan.class);
         mPresenter.clearStyleCheck();
         spanB = null;
         spanI = null;
         spanU = null;
         spanC = null;
         for (LimStyleSpan s : ss) {
-            if (span.getSpanStart(s) == end) continue; // 선택 앞쪽에서는 스타일 적용이 일어나면 안된다
+            if (mSpan.getSpanStart(s) == mEnd) continue; // 선택 앞쪽에서는 스타일 적용이 일어나면 안된다
             if (s.getStyle() == Typeface.BOLD) {
                 spanB = s;
-                spanB.start = span.getSpanStart(s);
-                spanB.end = span.getSpanEnd(s);
+                spanB.start = mSpan.getSpanStart(s);
+                spanB.end = mSpan.getSpanEnd(s);
                 mPresenter.isBold(true);
             }
             if (s.getStyle() == Typeface.ITALIC) {
                 spanI = s;
-                spanI.start = span.getSpanStart(s);
-                spanI.end = span.getSpanEnd(s);
+                spanI.start = mSpan.getSpanStart(s);
+                spanI.end = mSpan.getSpanEnd(s);
                 mPresenter.isItalic(true);
 
             }
         }
         for (LimUnderlineSpan u : us) {
-            if (span.getSpanStart(u) == end) continue;
+            if (mSpan.getSpanStart(u) == mEnd) continue;
             spanU = u;
-            spanU.start = span.getSpanStart(u);
-            spanU.end = span.getSpanEnd(u);
+            spanU.start = mSpan.getSpanStart(u);
+            spanU.end = mSpan.getSpanEnd(u);
             mPresenter.isUnderLine(true);
 
         }
         for (LimForegroundColorSpan f : fs) {
-            if (span.getSpanStart(f) == end) continue;
+            if (mSpan.getSpanStart(f) == mEnd) continue;
             spanC = f;
-            spanC.start = span.getSpanStart(f);
-            spanC.end = span.getSpanEnd(f);
+            spanC.start = mSpan.getSpanStart(f);
+            spanC.end = mSpan.getSpanEnd(f);
             mPresenter.isColor(f.getForegroundColor());
         }
         for (LimAbsoluteSizeSpan a : as) {
-            if (span.getSpanStart(a) == end) continue;
+            if (mSpan.getSpanStart(a) == mEnd) continue;
             spanS = a;
-            spanS.start = span.getSpanStart(a);
-            spanS.end = span.getSpanEnd(a);
+            spanS.start = mSpan.getSpanStart(a);
+            spanS.end = mSpan.getSpanEnd(a);
 
 
         }
