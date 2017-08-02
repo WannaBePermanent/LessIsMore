@@ -5,7 +5,8 @@ import java.util.ArrayList;
 
 import sechan.intern.lessismore.components.TextStyle.LimTextStyle;
 
-import static sechan.intern.lessismore.components.LimConstant.COMP_TEXT;
+import static sechan.intern.lessismore.components.EnumComp.COMP_TEXT;
+
 
 public class CompText extends Comp {
     String text;
@@ -32,15 +33,14 @@ public class CompText extends Comp {
         as=lass;
     }*/
     public CompText() {
-        category = COMP_TEXT;
+        super(COMP_TEXT);
     }
 
-    public void saveTextStyle(int type, int start, int end){
+    public void saveTextStyle(EnumText type, int start, int end){
         textStyles.add(new LimTextStyle(type,start,end));
     }
-    public void saveTextStyle(int type, int start, int end, int attr){
+    public void saveTextStyle(EnumText type, int start, int end, int attr){
         textStyles.add(new LimTextStyle(type,start,end,attr));
-
     }
     public void saveText(String str){
         this.text = str;

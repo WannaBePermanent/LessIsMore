@@ -34,10 +34,7 @@ public class LimEditText extends android.support.v7.widget.AppCompatEditText {
         if(listeners!=null)    listeners.onSelectionChanged(selStart,selEnd);
     }
 
-    @Override
-    public String toString(){
-        return "LimEditText";
-    }
+
 
 
 }

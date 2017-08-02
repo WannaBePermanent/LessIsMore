@@ -1,14 +1,12 @@
 package sechan.intern.lessismore;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import sechan.intern.lessismore.components.Comp;
 import sechan.intern.lessismore.components.CompImage;
 import sechan.intern.lessismore.components.CompImages;
 import sechan.intern.lessismore.components.CompText;
-import sechan.intern.lessismore.helpers.Post;
-import sechan.intern.lessismore.util.BasePresenter;
-import sechan.intern.lessismore.util.BaseView;
 
 
 public interface LimContract {
@@ -56,19 +54,19 @@ public interface LimContract {
         // 컴포넌트 추가 종류에 대한 PolyMorphism, 여기가 아니라 다른 곳에서 적용해야 할지도 모름
         //추가
 
-        Post deleteComp(Comp comp);
+        ArrayList<Comp> deleteComp(Comp comp);
 
-        Post updateComp(CompText comp);
+        ArrayList<Comp> updateComp(CompText comp);
         //수정, 삭제
 
-        Post concatimgs(CompImage img1, CompImage img2); // 1개 + 1개
+        ArrayList<Comp> concatimgs(CompImage img1, CompImage img2); // 1개 + 1개
 
-        Post concatimgs(CompImages imgs1, CompImage img2); // 2개 + 1개
+        ArrayList<Comp> concatimgs(CompImages imgs1, CompImage img2); // 2개 + 1개
         //이미지 연결
 
         boolean save(Date date);
 
-        Post load(int index);
+        ArrayList<Comp> load(int index);
         //저장 불러오기
 
         boolean setTitleBackground(String imagePath); // 리턴과 파라메터 수정해야할지도 모름

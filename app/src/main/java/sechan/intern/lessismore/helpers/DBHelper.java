@@ -1,8 +1,5 @@
 package sechan.intern.lessismore.helpers;
 
-import java.util.List;
-
-
 public class DBHelper {
     // private final Post instance;
     private static DBHelper instance = null;
@@ -13,17 +10,17 @@ public class DBHelper {
         return instance;
     }
 
-    List<Post> savedLists(){
+    /*List<Post> savedLists(){
 
         return null;
-    }
+    }*/
     boolean savePost(){
 
         return false;
     }
-    Post loadPost(int index){
+    /*Post loadPost(int index){
         return null;
 
-    }
+    }*/
 
 }

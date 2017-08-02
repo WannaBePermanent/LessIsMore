@@ -17,7 +17,14 @@ import com.madrapps.pikolo.HSLColorPicker;
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
 
 import sechan.intern.lessismore.components.Comp;
-import sechan.intern.lessismore.components.LimConstant;
+import sechan.intern.lessismore.components.EnumText;
+
+import static sechan.intern.lessismore.components.EnumText.TEXTBOLD;
+import static sechan.intern.lessismore.components.EnumText.TEXTCOLOR;
+import static sechan.intern.lessismore.components.EnumText.TEXTDECSIZE;
+import static sechan.intern.lessismore.components.EnumText.TEXTINCSIZE;
+import static sechan.intern.lessismore.components.EnumText.TEXTITALIC;
+import static sechan.intern.lessismore.components.EnumText.TEXTUNDERLINE;
 
 //public class MainActivity extends AppCompatActivity implements LimContract.View {
 public class MainActivity extends AppCompatActivity {
@@ -100,8 +107,9 @@ public class MainActivity extends AppCompatActivity {
         btnColorOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.setStyle(LimConstant.TEXTCOLOR, mColor);
+                mPresenter.setStyle(TEXTCOLOR, mColor);
                 showMessage("색상이 선택되었습니다");
+                llColorPicker.setVisibility(View.GONE);
 
             }
         });
@@ -117,20 +125,20 @@ public class MainActivity extends AppCompatActivity {
         btnBold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.setStyle(LimConstant.TEXTBOLD);
+                mPresenter.setStyle(TEXTBOLD);
 
             }
         });
         btnItalic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.setStyle(LimConstant.TEXTITALIC);
+                mPresenter.setStyle(TEXTITALIC);
             }
         });
         btnUl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.setStyle(LimConstant.TEXTUNDERLINE);
+                mPresenter.setStyle(TEXTUNDERLINE);
             }
         });
 
@@ -138,13 +146,13 @@ public class MainActivity extends AppCompatActivity {
         btnInc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.setStyle(LimConstant.TEXTINCSIZE);
+                mPresenter.setStyle(TEXTINCSIZE);
             }
         });
         btnDec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.setStyle(LimConstant.TEXTDECSIZE);
+                mPresenter.setStyle(TEXTDECSIZE);
             }
         });
 
@@ -222,11 +230,13 @@ public class MainActivity extends AppCompatActivity {
         rv.setAdapter(mAdapter);
 
 
+
     } //Post정보 - 어댑터 - RecyclerView 간 매핑
+
 
     public void displayComponent(int index) {
         //   mAdapter.notifyItemInserted(index);
-        //mAdapter.notifyDataSetChanged();
+            //mAdapter.notifyDataSetChanged();
     } //
 
     public void displayComponent() {
@@ -276,26 +286,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void setBtn(int style, boolean b) {
+        public void setBtn(EnumText style, boolean isSet) {
 
 
         switch (style) {
-            case LimConstant.TEXTBOLD:
-                if (b)
+            case TEXTBOLD:
+                if (isSet)
                     btnBold.setColorFilter(cGreen);
                 else btnBold.clearColorFilter();
 
 
                 break;
-            case LimConstant.TEXTITALIC:
-                if (b)
+            case TEXTITALIC:
+                if (isSet)
                     btnItalic.setColorFilter(cGreen);
                 else
                     btnItalic.clearColorFilter();
 
                 break;
-            case LimConstant.TEXTUNDERLINE:
-                if (b)
+            case TEXTUNDERLINE:
+                if (isSet)
                     btnUl.setColorFilter(cGreen);
                 else
                     btnUl.clearColorFilter();
@@ -304,11 +314,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    public void showRemoveButton(boolean b){
-        if (b) btnDelComp.setVisibility(View.VISIBLE);
+    public void showRemoveButton(boolean isVisible){
+        if (isVisible) btnDelComp.setVisibility(View.VISIBLE);
         else btnDelComp.setVisibility(View.INVISIBLE);
     }
-    public void setBtn(int style, int color) {
+    public void setBtn(EnumText style, int color) {
         btnColor.setColorFilter(color);
     }
 

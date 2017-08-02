@@ -1,18 +1,18 @@
 package sechan.intern.lessismore;
 
 
+import java.util.ArrayList;
+
 import sechan.intern.lessismore.components.Comp;
 import sechan.intern.lessismore.components.CompImage;
 import sechan.intern.lessismore.components.CompText;
 import sechan.intern.lessismore.helpers.DBHelper;
-
 import sechan.intern.lessismore.helpers.MapHelper;
-import sechan.intern.lessismore.helpers.Post;
 
 public class LimRepo {
     // Singleton Pattern 적용, Factory Static Method
     private static LimRepo instance = null;
-    private static final Post mPost = new Post();
+    private static final ArrayList<Comp> mPost = new ArrayList<>();
     private static final MapHelper mapHelper = MapHelper.getInstance();
     private static final DBHelper dbHelper = DBHelper.getInstance();
     // 헬퍼들을 모두 정적 팩토리 메소드를 이용해 생성 getInstance();
@@ -73,7 +73,7 @@ public class LimRepo {
     */
 
 
-    public Post getPost() {
+    public ArrayList<Comp> getPost() {
         return mPost;
     }
 
