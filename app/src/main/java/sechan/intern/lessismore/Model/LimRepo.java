@@ -1,4 +1,4 @@
-package sechan.intern.lessismore;
+package sechan.intern.lessismore.Model;
 
 
 import java.util.ArrayList;
@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import sechan.intern.lessismore.components.Comp;
 import sechan.intern.lessismore.components.CompImage;
 import sechan.intern.lessismore.components.CompText;
-import sechan.intern.lessismore.helpers.DBHelper;
-import sechan.intern.lessismore.helpers.MapHelper;
+import sechan.intern.lessismore.Model.helpers.DBHelper;
+import sechan.intern.lessismore.Model.helpers.MapHelper;
 
 public class LimRepo {
     // Singleton Pattern 적용, Factory Static Method

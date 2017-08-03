@@ -1,15 +1,19 @@
-package sechan.intern.lessismore;
+package sechan.intern.lessismore.Lim;
 
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Date;
 
+import sechan.intern.lessismore.Lim.Adapater.LimAdapter;
+import sechan.intern.lessismore.Model.LimRepo;
 import sechan.intern.lessismore.components.Comp;
 import sechan.intern.lessismore.components.CompImage;
 import sechan.intern.lessismore.components.CompImages;
 import sechan.intern.lessismore.components.CompText;
 import sechan.intern.lessismore.components.EnumText;
+import sechan.intern.lessismore.Model.helpers.TextHelper;
+import sechan.intern.lessismore.components.LimEditText;
 
 import static sechan.intern.lessismore.components.EnumText.TEXTBOLD;
 import static sechan.intern.lessismore.components.EnumText.TEXTCOLOR;
@@ -22,13 +26,15 @@ public class LimPresenter {
 
     //Singleton Pattern
     private final LimRepo mRepo;
-    private final MainActivity mView;
+    private final LimActivity mView;
     private final LimAdapter mAdapter;
     private final TextHelper mTextHelper;
+    private final ArrayList<Comp> mPost;
 
     public LimPresenter(@NonNull LimRepo repo,
-                        @NonNull MainActivity view) {
+                        @NonNull LimActivity view) {
         mRepo = repo;
+        mPost = mRepo.getPost();
         mView = view;
         mView.setPresenter(this);
         mTextHelper = TextHelper.getInstance();
@@ -42,7 +48,7 @@ public class LimPresenter {
     public void start() {
         mView.showHelperLoaded(mRepo.helperLoaded()); // 나중에 삭제, Helper-Repo-Presenter-View가 잘 연결되어 있는지 확인
         mView.setAdapter(mAdapter);
-        mAdapter.setContext(mView.getApplicationContext());
+
 
     }
 
@@ -115,6 +121,16 @@ public class LimPresenter {
         return false;
 
     } //저장
+
+    public void imageStrip(){
+        int position = mAdapter.getPosition();
+        ((CompImage)mPost.get(position-1)).ConcatImage(((CompImage)mPost.get(position)).ImagePath()[0]);
+        mAdapter.imageStrip(position-1,1);
+        removeComp(); //현재 이미지 선택해야함
+
+        //mAdapter.notifyItemChanged(position-1); 체인지 시에 onBind 고려할것
+    }
+
     public boolean save() {
     mAdapter.saveText();
         return false;
@@ -208,6 +224,12 @@ public class LimPresenter {
 
     public void showMessage(String str){
         mView.showMessage(str);
+    }
+    public void setCompText(LimEditText compText){
+        mTextHelper.setCompText(compText);
+    }
+    public void saveText(){
+        //mTextHelper.saveText();
     }
 
 

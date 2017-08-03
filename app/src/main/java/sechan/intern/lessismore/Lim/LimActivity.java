@@ -1,4 +1,4 @@
-package sechan.intern.lessismore;
+package sechan.intern.lessismore.Lim;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,6 +16,9 @@ import android.widget.Toast;
 import com.madrapps.pikolo.HSLColorPicker;
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
 
+import sechan.intern.lessismore.Lim.Adapater.LimAdapter;
+import sechan.intern.lessismore.Model.LimRepo;
+import sechan.intern.lessismore.R;
 import sechan.intern.lessismore.components.Comp;
 import sechan.intern.lessismore.components.EnumText;
 
@@ -26,8 +29,8 @@ import static sechan.intern.lessismore.components.EnumText.TEXTINCSIZE;
 import static sechan.intern.lessismore.components.EnumText.TEXTITALIC;
 import static sechan.intern.lessismore.components.EnumText.TEXTUNDERLINE;
 
-//public class MainActivity extends AppCompatActivity implements LimContract.View {
-public class MainActivity extends AppCompatActivity {
+//public class LimActivity extends AppCompatActivity implements LimContract.View {
+public class LimActivity extends AppCompatActivity {
     // 액티비티에서 직접 뷰 구현
 
     //private LimContract.Presenter mPresenter;
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton btnTitleImage;
     ImageButton btnInc, btnDec, btnBold, btnItalic, btnColor, btnUl;
     ImageButton btnColorOK;
+    ImageButton btnImageLink;
     int mColor;
 
     @Override
@@ -54,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
         rv = (RecyclerView) findViewById(R.id.rv_contents);
         rv.setLayoutManager(new LinearLayoutManager(this));
         mPresenter.start();
-
 
         // 다이얼로그 뷰 세팅 시작
         final AlertDialog.Builder alertBuilder_add = new AlertDialog.Builder(
@@ -104,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         // 저장, 불러오기 컴포넌트추가 버튼 끝
 
         btnTitleImage = (ImageButton) findViewById(R.id.btn_titleimage);
+        btnImageLink = (ImageButton) findViewById(R.id.btn_imagelink);
         btnColorOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -221,17 +225,23 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
+        btnImageLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.imageStrip();
+            }
+        });
 
     }
 
     public void setAdapter(LimAdapter adapter) {
         mAdapter = adapter;
         rv.setAdapter(mAdapter);
+    }
+    public RecyclerView getRecyclerView(){
+        return rv;
 
-
-
-    } //Post정보 - 어댑터 - RecyclerView 간 매핑
+    }
 
 
     public void displayComponent(int index) {

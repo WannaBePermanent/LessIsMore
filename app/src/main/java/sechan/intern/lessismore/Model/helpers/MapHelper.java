@@ -1,4 +1,4 @@
-package sechan.intern.lessismore.helpers;
+package sechan.intern.lessismore.Model.helpers;
 
 
 public class MapHelper {

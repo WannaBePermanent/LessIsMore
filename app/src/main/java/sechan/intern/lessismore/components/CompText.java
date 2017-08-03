@@ -45,6 +45,9 @@ public class CompText extends Comp {
     public void saveText(String str){
         this.text = str;
     }
+    public String getText(){
+        return text;
+    }
   /*  List<Style> style;
 
     void setStyle(int start, int end, int attributes, int mode) {// mode 1 = Color, 2 = Size, 3 = Bold, 4 = Italic, 5 = Underline

@@ -1,8 +1,11 @@
-package sechan.intern.lessismore;
+package sechan.intern.lessismore.Lim;
 
 import java.util.ArrayList;
 import java.util.Date;
 
+import sechan.intern.lessismore.BasePresenter;
+import sechan.intern.lessismore.BaseView;
+import sechan.intern.lessismore.Lim.Adapater.LimAdapter;
 import sechan.intern.lessismore.components.Comp;
 import sechan.intern.lessismore.components.CompImage;
 import sechan.intern.lessismore.components.CompImages;

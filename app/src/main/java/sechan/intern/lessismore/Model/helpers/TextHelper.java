@@ -1,4 +1,4 @@
-package sechan.intern.lessismore;
+package sechan.intern.lessismore.Model.helpers;
 
 import android.graphics.Typeface;
 import android.text.Spannable;
@@ -8,6 +8,8 @@ import android.view.View;
 
 import java.util.ArrayList;
 
+import sechan.intern.lessismore.components.LimEditText;
+import sechan.intern.lessismore.Lim.LimPresenter;
 import sechan.intern.lessismore.components.EnumText;
 import sechan.intern.lessismore.components.TextStyle.LimAbsoluteSizeSpan;
 import sechan.intern.lessismore.components.TextStyle.LimForegroundColorSpan;
@@ -24,6 +26,7 @@ import static sechan.intern.lessismore.components.EnumText.TEXTUNDERLINE;
 
 public class TextHelper {
     private static TextHelper instance = null;
+
     public static TextHelper getInstance() {
         if (instance == null) {
             instance = new TextHelper();
@@ -45,18 +48,28 @@ public class TextHelper {
     private int mEnd;
     private int mTextSize;
 
-    public void setPresenter(LimPresenter pres){
-        mPresenter=pres;
+    public void setPresenter(LimPresenter pres) {
+        mPresenter = pres;
     }
-    public void setCompText(LimEditText lt){
+
+    public void setCompText(LimEditText lt) {
         mEdit = lt;
+        mTextSize = (int) mEdit.getTextSize();
+        init();
+        mEdit.addOnSelectionChangedListener(new LimEditText.onSelectionChangedListener() {
+            @Override
+            public void onSelectionChanged(int selStart, int selEnd) {
+               init();
+            }
+        });
+
+    }
+    private void init(){
         mStart = mEdit.getSelectionStart();
         mEnd = mEdit.getSelectionEnd();
         mSpan = mEdit.getText();
-        mTextSize = (int) mEdit.getTextSize();
         if (!doSpace) getStyle();
     }
-
 
     public void setBold() {
         if (spanBold == null) {
@@ -64,7 +77,7 @@ public class TextHelper {
             setStyle(spanBold);
             mPresenter.setBold(true); //메소드명 변경
         } else {
-            setStyle(spanBold, spanBold.start, spanBold.end, new LimStyleSpan(Typeface.BOLD),new LimStyleSpan(Typeface.BOLD));
+            setStyle(spanBold, spanBold.start, spanBold.end, new LimStyleSpan(Typeface.BOLD), new LimStyleSpan(Typeface.BOLD));
             spanBold = null;
             mPresenter.setBold(false);
 
@@ -79,7 +92,7 @@ public class TextHelper {
             setStyle(spanItalic);
             mPresenter.setItalic(true);
         } else {
-            setStyle(spanItalic, spanItalic.start, spanItalic.end, new LimStyleSpan(Typeface.ITALIC),new LimStyleSpan(Typeface.ITALIC));
+            setStyle(spanItalic, spanItalic.start, spanItalic.end, new LimStyleSpan(Typeface.ITALIC), new LimStyleSpan(Typeface.ITALIC));
             spanItalic = null;
             mPresenter.setItalic(false);
         }
@@ -91,7 +104,7 @@ public class TextHelper {
             setStyle(spanUnderline);
             mPresenter.setUnderline(true);
         } else {
-            setStyle(spanUnderline, spanUnderline.start, spanUnderline.end, new LimUnderlineSpan(),new LimUnderlineSpan());
+            setStyle(spanUnderline, spanUnderline.start, spanUnderline.end, new LimUnderlineSpan(), new LimUnderlineSpan());
             spanUnderline = null;
             mPresenter.setUnderline(false);
 
@@ -114,7 +127,7 @@ public class TextHelper {
         int textSize = mTextSize;
         if (spanSize != null) {
             textSize = spanSize.getSize();
-            setStyle(spanSize, spanSize.start, spanSize.end, new LimAbsoluteSizeSpan(textSize),new LimAbsoluteSizeSpan(textSize));
+            setStyle(spanSize, spanSize.start, spanSize.end, new LimAbsoluteSizeSpan(textSize), new LimAbsoluteSizeSpan(textSize));
         }
         if (inc) spanSize = new LimAbsoluteSizeSpan(textSize + 5);
         else spanSize = new LimAbsoluteSizeSpan(textSize - 5);
@@ -143,6 +156,7 @@ public class TextHelper {
         //쪼개서 스펜넣기
 
     }
+
     private void setStyle(CharacterStyle newSpan) {
         preStyle();
         mSpan.setSpan(newSpan,
@@ -164,6 +178,8 @@ public class TextHelper {
         }
         return false;
     }
+
+
 
     private void getStyle() {
         LimStyleSpan styleSpan[] = mSpan.getSpans(mStart, mEnd, LimStyleSpan.class);
@@ -214,6 +230,7 @@ public class TextHelper {
             spanSize.end = mSpan.getSpanEnd(sizeElement);
         }
     }
+
     public void saveText(ArrayList<View> mList) {
         for (int viewIndex = 0; viewIndex < mList.size(); viewIndex++) {
             if (mList.get(viewIndex) instanceof LimEditText) {

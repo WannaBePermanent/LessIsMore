@@ -9,7 +9,7 @@
 
     >
 
-    <sechan.intern.lessismore.LimEditText
+    <sechan.intern.lessismore.components.LimEditText
         android:id="@+id/edit_comp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

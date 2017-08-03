@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
@@ -10,14 +10,37 @@
     >
 
     <ImageView
-        android:id="@+id/iv_comp"
+        android:id="@+id/iv_comp0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/ic_launcher"
-        android:paddingRight="2dp"
-        android:paddingLeft="2dp"
-        android:paddingTop="2dp"
+        android:layout_weight="1"
         android:paddingBottom="2dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:paddingTop="2dp"
+        app:srcCompat="@drawable/icon_bold" />
+
+    <ImageView
+        android:id="@+id/iv_comp1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:paddingTop="2dp"
+        android:layout_weight="1"
+        android:visibility="gone"
         />
 
+    <ImageView
+        android:id="@+id/iv_comp2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:paddingTop="2dp"
+        android:layout_weight="1"
+        android:visibility="gone"
+        />
 </LinearLayout>

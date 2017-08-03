@@ -11,7 +11,7 @@
         android:supportsRtl="true"
 
         android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
-        <activity android:name=".MainActivity"
+        <activity android:name=".Lim.LimActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             >
