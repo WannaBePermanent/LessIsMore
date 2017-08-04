@@ -9,4 +9,13 @@
 
     >
 
+    <com.nhn.android.maps.NMapView
+        android:id="@+id/mapView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        >
+
+
+    </com.nhn.android.maps.NMapView>
 </LinearLayout>

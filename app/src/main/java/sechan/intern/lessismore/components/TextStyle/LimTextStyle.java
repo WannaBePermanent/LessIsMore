@@ -1,6 +1,6 @@
 package sechan.intern.lessismore.components.TextStyle;
 
-import sechan.intern.lessismore.components.EnumText;
+import sechan.intern.lessismore.components.Enum.EnumText;
 
 /**
  * Created by Sechan on 2017-08-01.

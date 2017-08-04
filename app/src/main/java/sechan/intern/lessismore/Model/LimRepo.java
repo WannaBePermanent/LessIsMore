@@ -36,9 +36,9 @@ public class LimRepo {
     }
 
     public int addCompText() {
-        Comp c = new CompText();
-        if (c != null) {
-            mPost.add(c);
+        Comp compText = new CompText();
+        if (compText != null) {
+            mPost.add(compText);
             return mPost.size()-1;
         }
         return 0;
@@ -46,13 +46,22 @@ public class LimRepo {
     }
 
     public int addCompImage(String imagePath) {
-        Comp c = new CompImage(imagePath);
-        if (c != null) {
-            mPost.add(c);
+        Comp compImage = new CompImage(imagePath);
+        if (compImage != null) {
+            mPost.add(compImage);
             return mPost.size()-1;
         }
         return 0;
     }
+    public int addCompImage(String imagePath, int position) {
+        Comp compImage = new CompImage(imagePath);
+        if (compImage != null) {
+            mPost.add(position, compImage);
+            return position;
+        }
+        return 0;
+    }
+
 
     public int savePostInstance(){
 

@@ -7,6 +7,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -16,18 +17,19 @@ import android.widget.Toast;
 import com.madrapps.pikolo.HSLColorPicker;
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
 
+import sechan.intern.lessismore.Lim.Adapater.ItemTouchHelperCallback;
 import sechan.intern.lessismore.Lim.Adapater.LimAdapter;
 import sechan.intern.lessismore.Model.LimRepo;
 import sechan.intern.lessismore.R;
 import sechan.intern.lessismore.components.Comp;
-import sechan.intern.lessismore.components.EnumText;
+import sechan.intern.lessismore.components.Enum.EnumText;
 
-import static sechan.intern.lessismore.components.EnumText.TEXTBOLD;
-import static sechan.intern.lessismore.components.EnumText.TEXTCOLOR;
-import static sechan.intern.lessismore.components.EnumText.TEXTDECSIZE;
-import static sechan.intern.lessismore.components.EnumText.TEXTINCSIZE;
-import static sechan.intern.lessismore.components.EnumText.TEXTITALIC;
-import static sechan.intern.lessismore.components.EnumText.TEXTUNDERLINE;
+import static sechan.intern.lessismore.components.Enum.EnumText.TEXTBOLD;
+import static sechan.intern.lessismore.components.Enum.EnumText.TEXTCOLOR;
+import static sechan.intern.lessismore.components.Enum.EnumText.TEXTDECSIZE;
+import static sechan.intern.lessismore.components.Enum.EnumText.TEXTINCSIZE;
+import static sechan.intern.lessismore.components.Enum.EnumText.TEXTITALIC;
+import static sechan.intern.lessismore.components.Enum.EnumText.TEXTUNDERLINE;
 
 //public class LimActivity extends AppCompatActivity implements LimContract.View {
 public class LimActivity extends AppCompatActivity {
@@ -47,7 +49,7 @@ public class LimActivity extends AppCompatActivity {
     ImageButton btnTitleImage;
     ImageButton btnInc, btnDec, btnBold, btnItalic, btnColor, btnUl;
     ImageButton btnColorOK;
-    ImageButton btnImageLink;
+    ImageButton btnImageLink, btnImageDivide;
     int mColor;
 
     @Override
@@ -108,6 +110,7 @@ public class LimActivity extends AppCompatActivity {
 
         btnTitleImage = (ImageButton) findViewById(R.id.btn_titleimage);
         btnImageLink = (ImageButton) findViewById(R.id.btn_imagelink);
+        btnImageDivide = (ImageButton) findViewById(R.id.btn_imagedivide);
         btnColorOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -231,12 +234,22 @@ public class LimActivity extends AppCompatActivity {
                 mPresenter.imageStrip();
             }
         });
+        btnImageDivide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.imageDivide();
+            }
+        });
 
     }
 
     public void setAdapter(LimAdapter adapter) {
         mAdapter = adapter;
         rv.setAdapter(mAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(mAdapter));
+        itemTouchHelper.attachToRecyclerView(rv);
+
+
     }
     public RecyclerView getRecyclerView(){
         return rv;
@@ -345,6 +358,15 @@ public class LimActivity extends AppCompatActivity {
 
 
     }
+    public void showStripBtn(boolean show) {
+        if (show) btnImageLink.setVisibility(View.VISIBLE);
+        else btnImageLink.setVisibility(View.INVISIBLE);
+    }
+    public void showDivideBtn(boolean show) {
+        if (show) btnImageDivide.setVisibility(View.VISIBLE);
+        else btnImageDivide.setVisibility(View.INVISIBLE);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -362,6 +384,9 @@ public class LimActivity extends AppCompatActivity {
         }
 
 
+    }
+    public RecyclerView.ViewHolder getHolder(int position){
+        return rv.findViewHolderForAdapterPosition(position);
     }
 
 }

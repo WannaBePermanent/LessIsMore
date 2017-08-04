@@ -1,24 +1,25 @@
 package sechan.intern.lessismore.Lim;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 import sechan.intern.lessismore.Lim.Adapater.LimAdapter;
 import sechan.intern.lessismore.Model.LimRepo;
+import sechan.intern.lessismore.Model.helpers.ImageHelper;
+import sechan.intern.lessismore.Model.helpers.TextHelper;
 import sechan.intern.lessismore.components.Comp;
 import sechan.intern.lessismore.components.CompImage;
-import sechan.intern.lessismore.components.CompImages;
 import sechan.intern.lessismore.components.CompText;
-import sechan.intern.lessismore.components.EnumText;
-import sechan.intern.lessismore.Model.helpers.TextHelper;
+import sechan.intern.lessismore.components.Enum.EnumText;
 import sechan.intern.lessismore.components.LimEditText;
 
-import static sechan.intern.lessismore.components.EnumText.TEXTBOLD;
-import static sechan.intern.lessismore.components.EnumText.TEXTCOLOR;
-import static sechan.intern.lessismore.components.EnumText.TEXTITALIC;
-import static sechan.intern.lessismore.components.EnumText.TEXTUNDERLINE;
+import static sechan.intern.lessismore.components.Enum.EnumText.TEXTBOLD;
+import static sechan.intern.lessismore.components.Enum.EnumText.TEXTCOLOR;
+import static sechan.intern.lessismore.components.Enum.EnumText.TEXTITALIC;
+import static sechan.intern.lessismore.components.Enum.EnumText.TEXTUNDERLINE;
 
 
 //public class LimPresenter implements LimContract.Presenter {
@@ -29,8 +30,8 @@ public class LimPresenter {
     private final LimActivity mView;
     private final LimAdapter mAdapter;
     private final TextHelper mTextHelper;
+    private final ImageHelper mImageHelper;
     private final ArrayList<Comp> mPost;
-
     public LimPresenter(@NonNull LimRepo repo,
                         @NonNull LimActivity view) {
         mRepo = repo;
@@ -39,6 +40,8 @@ public class LimPresenter {
         mView.setPresenter(this);
         mTextHelper = TextHelper.getInstance();
         mTextHelper.setPresenter(this);
+        mImageHelper = ImageHelper.getInstance();
+        mImageHelper.setPresenter(this);
         mAdapter = new LimAdapter(mRepo.getPost());
         mAdapter.setPresenter(this);
     }
@@ -48,8 +51,6 @@ public class LimPresenter {
     public void start() {
         mView.showHelperLoaded(mRepo.helperLoaded()); // 나중에 삭제, Helper-Repo-Presenter-View가 잘 연결되어 있는지 확인
         mView.setAdapter(mAdapter);
-
-
     }
 
     public int addCompText() {
@@ -58,8 +59,9 @@ public class LimPresenter {
         int ret = mRepo.addCompText();
         if (ret >= 0) {
             mView.showMessage("텍스트 추가");
+            mAdapter.notifyItemRangeChanged(ret,mRepo.getPost().size());
+            //mAdapter.notifyItemInserted(ret);
 
-            mAdapter.notifyItemInserted(ret);
             //mAdapter.notifyItemRangeChanged(ret,mRepo.getPost().size());*/
             //mAdapter.notifyDataSetChanged();
         }
@@ -70,14 +72,31 @@ public class LimPresenter {
         int ret = mRepo.addCompImage((imagePath));
         if (ret >= 0) {
             mView.showMessage("이미지 추가");
-            mAdapter.notifyItemInserted(ret);
+            mAdapter.notifyItemRangeChanged(ret,mRepo.getPost().size());
+            //mAdapter.notifyItemInserted(ret);
+
+
             //mAdapter.notifyItemRangeChanged(ret,mRepo.getPost().size());
             //mAdapter.notifyDataSetChanged();
 
         }
         return -1;
     }
+    public int addCompImage(String imagePath,int position) {
+        int ret = mRepo.addCompImage(imagePath,position);
+        if (ret >= 0) {
+            mView.showMessage("이미지 추가");
+            mAdapter.notifyItemRangeChanged(ret,mRepo.getPost().size());
+            //mAdapter.notifyItemInserted(ret+1);
+            //mAdapter.notifyItemChanged(ret+1);
+            //mAdapter.notifyItemRangeChanged(ret,1);
+            // mAdapter.notifyDataSetChanged();
 
+            //mAdapter.notifyDataSetChanged();
+
+        }
+        return -1;
+    }
     public int addCompImages() {
         //mRepo.addCompImages();
         return 0;
@@ -88,15 +107,16 @@ public class LimPresenter {
         return 0;
     }
 
-    public void removeComp(){
+    public void removeComp() {
         int position = mAdapter.getPosition();
         if (position >= 0) {
             mRepo.getPost().remove(position);
             mAdapter.removeComp();
             //mAdapter.notifyItemRemoved(position);
-          //  mAdapter.notifyItemRangeChanged(position,mRepo.getPost().size());
+            //  mAdapter.notifyItemRangeChanged(position,mRepo.getPost().size());
             //mAdapter.notifyDataSetChanged();
-            mView.showRemoveButton(false);
+
+            hideBtn();
         }
     }
 
@@ -110,11 +130,11 @@ public class LimPresenter {
         return null;
 
     } // 1개 + 1개
-
+/*
     public ArrayList<Comp> concatimgs(CompImages imgs1, CompImage img2) {
         return null;
 
-    }
+    }*/
     //이미지 연결
 
     public boolean save(Date date) {
@@ -122,29 +142,46 @@ public class LimPresenter {
 
     } //저장
 
-    public void imageStrip(){
+    public void setStripable(boolean strip){
+        mView.showStripBtn(strip);
+    }
+    public void imageStrip() {
         int position = mAdapter.getPosition();
-        ((CompImage)mPost.get(position-1)).ConcatImage(((CompImage)mPost.get(position)).ImagePath()[0]);
-        mAdapter.imageStrip(position-1,1);
-        removeComp(); //현재 이미지 선택해야함
+        mImageHelper.setCompImage(mAdapter.getPrevImage(), ((CompImage) mPost.get(position - 1)).getImagePath());
+        mImageHelper.imageStrip(((CompImage) mPost.get(position)).getImagePath());
+        hideBtn();
 
         //mAdapter.notifyItemChanged(position-1); 체인지 시에 onBind 고려할것
     }
+    public void imageDivide(){
+        int position = mAdapter.getPosition();
+        mImageHelper.setCompImage(mAdapter.getImage(),((CompImage) mPost.get(position)).getImagePath());
+        mImageHelper.imageDivide();
+        hideBtn();
 
+
+    }
+
+    public int getPosition(){
+        return mAdapter.getPosition();
+    }
     public boolean save() {
-    mAdapter.saveText();
+        mAdapter.saveText();
         return false;
     } //저장
-    public void saveTextStyle(int position, EnumText type, int start, int end, int attr){
-        mRepo.getCompText(position).saveTextStyle(type,start,end,attr);
+
+    public void saveTextStyle(int position, EnumText type, int start, int end, int attr) {
+        mRepo.getCompText(position).saveTextStyle(type, start, end, attr);
         //mRepo.saveTextStyle(position, type,start,end,attr);
 
     }
-    public void saveTextStyle(int position, EnumText type, int start, int end){
-        mRepo.getCompText(position).saveTextStyle(type,start,end);
+
+    public void saveTextStyle(int position, EnumText type, int start, int end) {
+        mRepo.getCompText(position).saveTextStyle(type, start, end);
         //mRepo.saveTextStyle(position, type,start,end);
     }
-    public void saveText(int position, String str){
+
+    public void saveText(int position, String str) {
         mRepo.getCompText(position).saveText(str);
     }
 
@@ -222,15 +259,36 @@ public class LimPresenter {
         mView.showTextWidget(focus);
     }
 
-    public void showMessage(String str){
+    public void showMessage(String str) {
         mView.showMessage(str);
     }
-    public void setCompText(LimEditText compText){
+
+    public void setCompText(LimEditText compText) {
         mTextHelper.setCompText(compText);
     }
-    public void saveText(){
+
+    public void saveText() {
         //mTextHelper.saveText();
     }
+    public Comp getCurrentComp(){
+        int position = mAdapter.getPosition();
+        if (position>=0) return mPost.get(mAdapter.getPosition());
+        else return null;
+    }
+    public RecyclerView.ViewHolder getHolder(int position){
+        return mView.getHolder(position);
+    }
 
+    public void setDividable(boolean dividable){
+        if (dividable) mView.showDivideBtn(true);
+        else mView.showDivideBtn(false);
+    }
+
+    public void hideBtn(){
+        setDividable(false);
+        setStripable(false);
+        mView.showRemoveButton(false);
+
+    }
 
 }

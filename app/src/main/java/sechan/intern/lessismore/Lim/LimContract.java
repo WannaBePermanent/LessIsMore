@@ -7,8 +7,6 @@ import sechan.intern.lessismore.BasePresenter;
 import sechan.intern.lessismore.BaseView;
 import sechan.intern.lessismore.Lim.Adapater.LimAdapter;
 import sechan.intern.lessismore.components.Comp;
-import sechan.intern.lessismore.components.CompImage;
-import sechan.intern.lessismore.components.CompImages;
 import sechan.intern.lessismore.components.CompText;
 
 
@@ -62,10 +60,8 @@ public interface LimContract {
         ArrayList<Comp> updateComp(CompText comp);
         //수정, 삭제
 
-        ArrayList<Comp> concatimgs(CompImage img1, CompImage img2); // 1개 + 1개
 
-        ArrayList<Comp> concatimgs(CompImages imgs1, CompImage img2); // 2개 + 1개
-        //이미지 연결
+
 
         boolean save(Date date);
 

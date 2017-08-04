@@ -1,4 +1,4 @@
-package sechan.intern.lessismore.components;
+package sechan.intern.lessismore.components.Enum;
 
 /**
  * Created by Sechan on 2017-08-02.
