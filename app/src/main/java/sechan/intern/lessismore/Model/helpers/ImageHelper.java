@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
-import sechan.intern.lessismore.Lim.LimPresenter;
+import sechan.intern.lessismore.lim.LimPresenter;
 
 /**
  * Created by Sechan on 2017-08-04.

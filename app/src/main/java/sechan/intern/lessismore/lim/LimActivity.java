@@ -1,4 +1,4 @@
-package sechan.intern.lessismore.Lim;
+package sechan.intern.lessismore.lim;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,23 +17,26 @@ import android.widget.Toast;
 import com.madrapps.pikolo.HSLColorPicker;
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
 
-import sechan.intern.lessismore.Lim.Adapater.ItemTouchHelperCallback;
-import sechan.intern.lessismore.Lim.Adapater.LimAdapter;
 import sechan.intern.lessismore.Model.LimRepo;
 import sechan.intern.lessismore.R;
-import sechan.intern.lessismore.components.Comp;
-import sechan.intern.lessismore.components.Enum.EnumText;
+import sechan.intern.lessismore.lim.adapter.ItemTouchHelperCallback;
+import sechan.intern.lessismore.lim.adapter.LimAdapter;
+import sechan.intern.lessismore.lim.components.Comp;
+import sechan.intern.lessismore.lim.components.Enum.EnumText;
+import sechan.intern.lessismore.map.MapListActivity;
 
-import static sechan.intern.lessismore.components.Enum.EnumText.TEXTBOLD;
-import static sechan.intern.lessismore.components.Enum.EnumText.TEXTCOLOR;
-import static sechan.intern.lessismore.components.Enum.EnumText.TEXTDECSIZE;
-import static sechan.intern.lessismore.components.Enum.EnumText.TEXTINCSIZE;
-import static sechan.intern.lessismore.components.Enum.EnumText.TEXTITALIC;
-import static sechan.intern.lessismore.components.Enum.EnumText.TEXTUNDERLINE;
+import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTBOLD;
+import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTCOLOR;
+import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTDECSIZE;
+import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTINCSIZE;
+import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTITALIC;
+import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTUNDERLINE;
 
 //public class LimActivity extends AppCompatActivity implements LimContract.View {
 public class LimActivity extends AppCompatActivity {
     // 액티비티에서 직접 뷰 구현
+
+
 
     //private LimContract.Presenter mPresenter;
     private static final int cGreen = -16726212; // 네이버 녹색상
@@ -52,6 +55,8 @@ public class LimActivity extends AppCompatActivity {
     ImageButton btnImageLink, btnImageDivide;
     int mColor;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,13 +67,21 @@ public class LimActivity extends AppCompatActivity {
         mPresenter.start();
 
         // 다이얼로그 뷰 세팅 시작
-        final AlertDialog.Builder alertBuilder_add = new AlertDialog.Builder(
+        final AlertDialog.Builder alertBuilderAdd = new AlertDialog.Builder(
                 this);
-        final LayoutInflater inflater = this.getLayoutInflater();
-        final View addDialogView = inflater.inflate(R.layout.layout_add_dialog, null);
-        alertBuilder_add.setView(addDialogView);
-        final AlertDialog addDialog = alertBuilder_add.create();
+
+        final LayoutInflater addInflater = this.getLayoutInflater();
+        final View addDialogView = addInflater.inflate(R.layout.layout_add_dialog, null);
+
+
+        alertBuilderAdd.setView(addDialogView);
+        final AlertDialog addDialog = alertBuilderAdd.create();
         // 다이얼로그 뷰 세팅 끝
+
+
+
+
+
 
         final HSLColorPicker colorPicker = (HSLColorPicker) findViewById(R.id.colorPicker);
         colorPicker.setColorSelectionListener(new SimpleColorSelectionListener() {
@@ -83,6 +96,8 @@ public class LimActivity extends AppCompatActivity {
         });
         llTextWidget = (LinearLayout) findViewById(R.id.ll_textwidget);
         llColorPicker = (LinearLayout) findViewById(R.id.llColorPicker);
+
+
 
 
         // 컴포넌트들 추가 버튼
@@ -224,10 +239,20 @@ public class LimActivity extends AppCompatActivity {
         btnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 맵 클릭
+
+                addDialog.dismiss();
+                Intent intent = new Intent(LimActivity.this,MapListActivity.class);
+                startActivityForResult(intent, 1);
+                // MapActivity로 넘어가야함함
 
             }
-        });
+        }
+
+
+
+
+
+        );
         btnImageLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -240,6 +265,8 @@ public class LimActivity extends AppCompatActivity {
                 mPresenter.imageDivide();
             }
         });
+
+
 
     }
 
@@ -370,8 +397,19 @@ public class LimActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                String title =data.getStringExtra("title");
+                String address =data.getStringExtra("address");
+                showMessage(title + "\n"+address);
 
-        if (requestCode == REQ_CODE_SELECT_IMAGE) {
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //만약 반환값이 없을 경우의 코드를 여기에 작성하세요.
+            }
+        }
+
+       else if (requestCode == REQ_CODE_SELECT_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
 

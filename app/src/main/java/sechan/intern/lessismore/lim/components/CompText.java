@@ -1,12 +1,12 @@
-package sechan.intern.lessismore.components;
+package sechan.intern.lessismore.lim.components;
 
 
 import java.util.ArrayList;
 
-import sechan.intern.lessismore.components.Enum.EnumText;
-import sechan.intern.lessismore.components.TextStyle.LimTextStyle;
+import sechan.intern.lessismore.lim.components.Enum.EnumText;
+import sechan.intern.lessismore.lim.components.TextStyle.LimTextStyle;
 
-import static sechan.intern.lessismore.components.Enum.EnumComp.COMP_TEXT;
+import static sechan.intern.lessismore.lim.components.Enum.EnumComp.COMP_TEXT;
 
 
 public class CompText extends Comp {

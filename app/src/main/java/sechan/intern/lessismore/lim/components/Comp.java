@@ -1,6 +1,6 @@
-package sechan.intern.lessismore.components;
+package sechan.intern.lessismore.lim.components;
 
-import sechan.intern.lessismore.components.Enum.EnumComp;
+import sechan.intern.lessismore.lim.components.Enum.EnumComp;
 
 public class Comp {
     private EnumComp type;

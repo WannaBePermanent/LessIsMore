@@ -1,4 +1,4 @@
-package sechan.intern.lessismore.Lim.Adapater;
+package sechan.intern.lessismore.lim.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,14 +9,14 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import sechan.intern.lessismore.Lim.LimPresenter;
+import sechan.intern.lessismore.lim.LimPresenter;
 import sechan.intern.lessismore.Model.helpers.ImageHelper;
 import sechan.intern.lessismore.R;
-import sechan.intern.lessismore.components.Comp;
-import sechan.intern.lessismore.components.CompImage;
-import sechan.intern.lessismore.components.CompText;
-import sechan.intern.lessismore.components.Enum.EnumComp;
-import sechan.intern.lessismore.components.LimEditText;
+import sechan.intern.lessismore.lim.components.Comp;
+import sechan.intern.lessismore.lim.components.CompImage;
+import sechan.intern.lessismore.lim.components.CompText;
+import sechan.intern.lessismore.lim.components.Enum.EnumComp;
+import sechan.intern.lessismore.lim.components.LimEditText;
 
 
 public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemTouchHelperListener {
@@ -145,7 +145,7 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
         if (mList.size() > position) {
             mList.remove(position);
         }
-        mList.add(position, holder);
+        mList.add(position, holder); // 다른 방법으로 해결할 것 UI 제한으로
 
         switch (EnumComp.values()[viewType]) {
             case COMP_TEXT:

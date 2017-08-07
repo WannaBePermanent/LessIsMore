@@ -1,4 +1,4 @@
-package sechan.intern.lessismore.Lim.Adapater;
+package sechan.intern.lessismore.lim.adapter;
 
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -34,5 +34,6 @@ public class FocusHelper {
         if (isFocused) view.setBackground(mFocusedBackground);
         else view.setBackground(mDefaultBackground);
     }
+
 
 }

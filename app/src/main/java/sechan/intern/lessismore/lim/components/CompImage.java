@@ -1,11 +1,11 @@
-package sechan.intern.lessismore.components;
+package sechan.intern.lessismore.lim.components;
 
 
 import android.widget.ImageView;
 
 import java.util.ArrayList;
 
-import static sechan.intern.lessismore.components.Enum.EnumComp.COMP_IMAGE;
+import static sechan.intern.lessismore.lim.components.Enum.EnumComp.COMP_IMAGE;
 
 public class CompImage extends Comp {
     private ArrayList<String> imagePath = new ArrayList<>();

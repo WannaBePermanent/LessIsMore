@@ -3,9 +3,9 @@ package sechan.intern.lessismore.Model;
 
 import java.util.ArrayList;
 
-import sechan.intern.lessismore.components.Comp;
-import sechan.intern.lessismore.components.CompImage;
-import sechan.intern.lessismore.components.CompText;
+import sechan.intern.lessismore.lim.components.Comp;
+import sechan.intern.lessismore.lim.components.CompImage;
+import sechan.intern.lessismore.lim.components.CompText;
 import sechan.intern.lessismore.Model.helpers.DBHelper;
 import sechan.intern.lessismore.Model.helpers.MapHelper;
 

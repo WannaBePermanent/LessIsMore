@@ -8,19 +8,19 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-import sechan.intern.lessismore.Lim.LimPresenter;
-import sechan.intern.lessismore.components.CompText;
-import sechan.intern.lessismore.components.Enum.EnumText;
-import sechan.intern.lessismore.components.LimEditText;
-import sechan.intern.lessismore.components.TextStyle.LimAbsoluteSizeSpan;
-import sechan.intern.lessismore.components.TextStyle.LimForegroundColorSpan;
-import sechan.intern.lessismore.components.TextStyle.LimStyleSpan;
-import sechan.intern.lessismore.components.TextStyle.LimUnderlineSpan;
+import sechan.intern.lessismore.lim.LimPresenter;
+import sechan.intern.lessismore.lim.components.CompText;
+import sechan.intern.lessismore.lim.components.Enum.EnumText;
+import sechan.intern.lessismore.lim.components.LimEditText;
+import sechan.intern.lessismore.lim.components.TextStyle.LimAbsoluteSizeSpan;
+import sechan.intern.lessismore.lim.components.TextStyle.LimForegroundColorSpan;
+import sechan.intern.lessismore.lim.components.TextStyle.LimStyleSpan;
+import sechan.intern.lessismore.lim.components.TextStyle.LimUnderlineSpan;
 
-import static sechan.intern.lessismore.components.Enum.EnumComp.COMP_TEXT;
-import static sechan.intern.lessismore.components.Enum.EnumText.TEXTCOLOR;
-import static sechan.intern.lessismore.components.Enum.EnumText.TEXTSIZE;
-import static sechan.intern.lessismore.components.Enum.EnumText.TEXTUNDERLINE;
+import static sechan.intern.lessismore.lim.components.Enum.EnumComp.COMP_TEXT;
+import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTCOLOR;
+import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTSIZE;
+import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTUNDERLINE;
 
 /**
  * Created by Sechan on 2017-08-02.

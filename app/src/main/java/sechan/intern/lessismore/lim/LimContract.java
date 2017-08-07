@@ -1,13 +1,13 @@
-package sechan.intern.lessismore.Lim;
+package sechan.intern.lessismore.lim;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 import sechan.intern.lessismore.BasePresenter;
 import sechan.intern.lessismore.BaseView;
-import sechan.intern.lessismore.Lim.Adapater.LimAdapter;
-import sechan.intern.lessismore.components.Comp;
-import sechan.intern.lessismore.components.CompText;
+import sechan.intern.lessismore.lim.adapter.LimAdapter;
+import sechan.intern.lessismore.lim.components.Comp;
+import sechan.intern.lessismore.lim.components.CompText;
 
 
 public interface LimContract {

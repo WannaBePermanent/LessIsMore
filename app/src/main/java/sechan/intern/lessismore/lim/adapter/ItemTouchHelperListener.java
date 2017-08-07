@@ -1,4 +1,4 @@
-package sechan.intern.lessismore.Lim.Adapater;
+package sechan.intern.lessismore.lim.adapter;
 
 import android.support.v7.widget.RecyclerView;
 

@@ -1,10 +1,10 @@
-package sechan.intern.lessismore.components;
+package sechan.intern.lessismore.lim.components;
 
 
 import android.content.Context;
 import android.util.AttributeSet;
 
-import sechan.intern.lessismore.Lim.Adapater.LimAdapter;
+import sechan.intern.lessismore.lim.adapter.LimAdapter;
 
 public class LimEditText extends android.support.v7.widget.AppCompatEditText {
     private onSelectionChangedListener listeners;

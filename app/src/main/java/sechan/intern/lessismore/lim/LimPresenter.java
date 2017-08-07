@@ -1,4 +1,4 @@
-package sechan.intern.lessismore.Lim;
+package sechan.intern.lessismore.lim;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -6,20 +6,20 @@ import android.support.v7.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Date;
 
-import sechan.intern.lessismore.Lim.Adapater.LimAdapter;
+import sechan.intern.lessismore.lim.adapter.LimAdapter;
 import sechan.intern.lessismore.Model.LimRepo;
 import sechan.intern.lessismore.Model.helpers.ImageHelper;
 import sechan.intern.lessismore.Model.helpers.TextHelper;
-import sechan.intern.lessismore.components.Comp;
-import sechan.intern.lessismore.components.CompImage;
-import sechan.intern.lessismore.components.CompText;
-import sechan.intern.lessismore.components.Enum.EnumText;
-import sechan.intern.lessismore.components.LimEditText;
+import sechan.intern.lessismore.lim.components.Comp;
+import sechan.intern.lessismore.lim.components.CompImage;
+import sechan.intern.lessismore.lim.components.CompText;
+import sechan.intern.lessismore.lim.components.Enum.EnumText;
+import sechan.intern.lessismore.lim.components.LimEditText;
 
-import static sechan.intern.lessismore.components.Enum.EnumText.TEXTBOLD;
-import static sechan.intern.lessismore.components.Enum.EnumText.TEXTCOLOR;
-import static sechan.intern.lessismore.components.Enum.EnumText.TEXTITALIC;
-import static sechan.intern.lessismore.components.Enum.EnumText.TEXTUNDERLINE;
+import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTBOLD;
+import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTCOLOR;
+import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTITALIC;
+import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTUNDERLINE;
 
 
 //public class LimPresenter implements LimContract.Presenter {
@@ -290,5 +290,6 @@ public class LimPresenter {
         mView.showRemoveButton(false);
 
     }
+
 
 }
