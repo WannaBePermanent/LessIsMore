@@ -1,5 +1,6 @@
 package sechan.intern.lessismore.map;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,16 +11,18 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import sechan.intern.lessismore.R;
+import sechan.intern.lessismore.map.MapClasses.MapItem;
 
 /**
  * Created by Sechan on 2017-08-07.
  */
 
 public class MapAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private ArrayList<MapDetail> mapList;
-    public MapAdapter(ArrayList<MapDetail> list) {
+    private ArrayList<MapItem> mapList;
+    private MapListActivity activity;
+    public MapAdapter(ArrayList<MapItem> list, MapListActivity activity) {
+        this.activity=activity;
         mapList = list;
-
         // getItemCount 베이스 구현자체에서 수량 가져와서 돌림
     }
 
@@ -42,16 +45,21 @@ public class MapAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final MapListHolder mapHolder = (MapListHolder) holder;
         mapHolder.tvTitle.setText(mapList.get(position).title.replace("<b>","").replace("</b>",""));
         mapHolder.tvAddress.setText(mapList.get(position).address);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                MapItem mapItem = mapList.get(position);
                 Intent intent = new Intent();
-                intent.putExtra("title",mapHolder.tvTitle.getText().toString());
-                intent.putExtra("address",mapHolder.tvAddress.getText().toString());
+                intent.putExtra("title",mapItem.title.replace("<b>","").replace("</b>",""));
+                intent.putExtra("address",mapItem.roadAddress);
+                intent.putExtra("mapx",mapItem.mapx);
+                intent.putExtra("mapy",mapItem.mapy);
+                activity.setResult(Activity.RESULT_OK,intent);
+                activity.finish();
 
             }
         });

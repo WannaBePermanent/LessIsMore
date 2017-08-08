@@ -1,18 +1,19 @@
 package sechan.intern.lessismore.lim;
 
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+
+import com.nhn.android.maps.NMapView;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-import sechan.intern.lessismore.lim.adapter.LimAdapter;
 import sechan.intern.lessismore.Model.LimRepo;
-import sechan.intern.lessismore.Model.helpers.ImageHelper;
+import sechan.intern.lessismore.Model.helpers.MapHelper;
 import sechan.intern.lessismore.Model.helpers.TextHelper;
+import sechan.intern.lessismore.lim.adapter.LimAdapter;
 import sechan.intern.lessismore.lim.components.Comp;
 import sechan.intern.lessismore.lim.components.CompImage;
-import sechan.intern.lessismore.lim.components.CompText;
+import sechan.intern.lessismore.lim.components.CompMap;
 import sechan.intern.lessismore.lim.components.Enum.EnumText;
 import sechan.intern.lessismore.lim.components.LimEditText;
 
@@ -30,7 +31,8 @@ public class LimPresenter {
     private final LimActivity mView;
     private final LimAdapter mAdapter;
     private final TextHelper mTextHelper;
-    private final ImageHelper mImageHelper;
+    private final MapHelper mMapHelper;
+    //private final ImageHelper mImageHelper;
     private final ArrayList<Comp> mPost;
     public LimPresenter(@NonNull LimRepo repo,
                         @NonNull LimActivity view) {
@@ -40,8 +42,9 @@ public class LimPresenter {
         mView.setPresenter(this);
         mTextHelper = TextHelper.getInstance();
         mTextHelper.setPresenter(this);
-        mImageHelper = ImageHelper.getInstance();
-        mImageHelper.setPresenter(this);
+        mMapHelper = MapHelper.getInstance();
+/*        mImageHelper = ImageHelper.getInstance();
+        mImageHelper.setPresenter(this);*/
         mAdapter = new LimAdapter(mRepo.getPost());
         mAdapter.setPresenter(this);
     }
@@ -61,7 +64,6 @@ public class LimPresenter {
             mView.showMessage("텍스트 추가");
             mAdapter.notifyItemRangeChanged(ret,mRepo.getPost().size());
             //mAdapter.notifyItemInserted(ret);
-
             //mAdapter.notifyItemRangeChanged(ret,mRepo.getPost().size());*/
             //mAdapter.notifyDataSetChanged();
         }
@@ -74,8 +76,6 @@ public class LimPresenter {
             mView.showMessage("이미지 추가");
             mAdapter.notifyItemRangeChanged(ret,mRepo.getPost().size());
             //mAdapter.notifyItemInserted(ret);
-
-
             //mAdapter.notifyItemRangeChanged(ret,mRepo.getPost().size());
             //mAdapter.notifyDataSetChanged();
 
@@ -91,20 +91,18 @@ public class LimPresenter {
             //mAdapter.notifyItemChanged(ret+1);
             //mAdapter.notifyItemRangeChanged(ret,1);
             // mAdapter.notifyDataSetChanged();
-
             //mAdapter.notifyDataSetChanged();
 
         }
         return -1;
     }
-    public int addCompImages() {
-        //mRepo.addCompImages();
+
+    public int addCompMap(int mapx,int mapy, String title, String address) {
+        mRepo.addCompMap(mMapHelper.convert(mapx,mapy),title,address);
         return 0;
     }
-
-    public int addCompMap() {
-        //mRepo.addCompMap();
-        return 0;
+    public void setMapView(NMapView mapView, int position){
+        mMapHelper.setMapView(mapView,(CompMap) mPost.get(position));
     }
 
     public void removeComp() {
@@ -120,22 +118,6 @@ public class LimPresenter {
         }
     }
 
-    public ArrayList<Comp> updateComp(CompText comp) {
-        return null;
-
-    }
-    //수정, 삭제
-
-    public ArrayList<Comp> concatimgs(CompImage img1, CompImage img2) {
-        return null;
-
-    } // 1개 + 1개
-/*
-    public ArrayList<Comp> concatimgs(CompImages imgs1, CompImage img2) {
-        return null;
-
-    }*/
-    //이미지 연결
 
     public boolean save(Date date) {
         return false;
@@ -147,24 +129,30 @@ public class LimPresenter {
     }
     public void imageStrip() {
         int position = mAdapter.getPosition();
-        mImageHelper.setCompImage(mAdapter.getPrevImage(), ((CompImage) mPost.get(position - 1)).getImagePath());
-        mImageHelper.imageStrip(((CompImage) mPost.get(position)).getImagePath());
+        CompImage prevImage = (CompImage) mPost.get(position-1);
+        CompImage currentImage = (CompImage) mPost.get(position);
+        if ((prevImage.getSize() + currentImage.getSize())<=3){
+            prevImage.getImagePath().addAll(currentImage.getImagePath());
+            mPost.remove(position);
+            mAdapter.notifyDataSetChanged();
+
+
+        }
         hideBtn();
 
         //mAdapter.notifyItemChanged(position-1); 체인지 시에 onBind 고려할것
     }
     public void imageDivide(){
         int position = mAdapter.getPosition();
-        mImageHelper.setCompImage(mAdapter.getImage(),((CompImage) mPost.get(position)).getImagePath());
-        mImageHelper.imageDivide();
+        CompImage image = (CompImage) mPost.get(position);
+        int lastIndex = image.getImagePath().size() - 1;
+        addCompImage(image.getImagePath(lastIndex),position+1); //다음 순서에 넣어야함
+        image.getImagePath().remove(lastIndex);
+        mAdapter.notifyDataSetChanged();
         hideBtn();
-
-
+        //removeComp();
     }
 
-    public int getPosition(){
-        return mAdapter.getPosition();
-    }
     public boolean save() {
         mAdapter.saveText();
         return false;
@@ -274,9 +262,6 @@ public class LimPresenter {
         int position = mAdapter.getPosition();
         if (position>=0) return mPost.get(mAdapter.getPosition());
         else return null;
-    }
-    public RecyclerView.ViewHolder getHolder(int position){
-        return mView.getHolder(position);
     }
 
     public void setDividable(boolean dividable){

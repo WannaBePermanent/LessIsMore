@@ -17,6 +17,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import sechan.intern.lessismore.R;
+import sechan.intern.lessismore.map.MapClasses.ApiService;
+import sechan.intern.lessismore.map.MapClasses.MapItem;
+import sechan.intern.lessismore.map.MapClasses.MapResult;
 
 /**
  * Created by Sechan on 2017-08-07.
@@ -44,11 +47,11 @@ public class MapListActivity extends AppCompatActivity {
     static final int display = 10;
     static final int start = 1;
     static final String sort = "random";
-    MapRes map;
+    MapResult map;
     //지역 API용 끝
 
     String query;
-    ArrayList<MapDetail> mapList = new ArrayList<>();
+    ArrayList<MapItem> mapList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,19 +63,17 @@ public class MapListActivity extends AppCompatActivity {
         editSearch = (EditText) findViewById(R.id.edit_search);
         mapRV= (RecyclerView) findViewById(R.id.rv_map);
         mapRV.setLayoutManager(new LinearLayoutManager(this));
-        mapAdapter = new MapAdapter(mapList);
+        mapAdapter = new MapAdapter(mapList,this);
         mapRV.setAdapter(mapAdapter);
         editSearch.setText("그린팩토리");
-
-
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 query = editSearch.getText().toString();
-                Call<MapRes> call = service.mapRes(clientId, clientSecret, display, start, sort, query);
-                call.enqueue(new Callback<MapRes>() {
+                Call<MapResult> call = service.mapRes(clientId, clientSecret, display, start, sort, query);
+                call.enqueue(new Callback<MapResult>() {
                     @Override
-                    public void onResponse(Call<MapRes> call, Response<MapRes> response) {
+                    public void onResponse(Call<MapResult> call, Response<MapResult> response) {
                         if (response.isSuccessful()) {
                             map = response.body();
                             mapList.clear();
@@ -81,14 +82,13 @@ public class MapListActivity extends AppCompatActivity {
                                 mapAdapter.notifyDataSetChanged();
                             }
 
-
                         } else {
 
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<MapRes> call, Throwable t) {
+                    public void onFailure(Call<MapResult> call, Throwable t) {
 
                     }
 

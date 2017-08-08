@@ -1,13 +1,16 @@
 package sechan.intern.lessismore.Model;
 
 
+import com.nhn.android.maps.maplib.NGeoPoint;
+
 import java.util.ArrayList;
 
-import sechan.intern.lessismore.lim.components.Comp;
-import sechan.intern.lessismore.lim.components.CompImage;
-import sechan.intern.lessismore.lim.components.CompText;
 import sechan.intern.lessismore.Model.helpers.DBHelper;
 import sechan.intern.lessismore.Model.helpers.MapHelper;
+import sechan.intern.lessismore.lim.components.Comp;
+import sechan.intern.lessismore.lim.components.CompImage;
+import sechan.intern.lessismore.lim.components.CompMap;
+import sechan.intern.lessismore.lim.components.CompText;
 
 public class LimRepo {
     // Singleton Pattern 적용, Factory Static Method
@@ -59,6 +62,11 @@ public class LimRepo {
             mPost.add(position, compImage);
             return position;
         }
+        return 0;
+    }
+
+    public int addCompMap(NGeoPoint point, String title, String address){
+        mPost.add(new CompMap(point,title,address));
         return 0;
     }
 

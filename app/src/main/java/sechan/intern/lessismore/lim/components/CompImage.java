@@ -1,16 +1,12 @@
 package sechan.intern.lessismore.lim.components;
 
 
-import android.widget.ImageView;
-
 import java.util.ArrayList;
 
 import static sechan.intern.lessismore.lim.components.Enum.EnumComp.COMP_IMAGE;
 
 public class CompImage extends Comp {
     private ArrayList<String> imagePath = new ArrayList<>();
-    private ArrayList<ImageView> imageView;
-
     public CompImage(String imagePath2) {
         super(COMP_IMAGE);
         imagePath.add(imagePath2);
@@ -23,22 +19,6 @@ public class CompImage extends Comp {
         return imagePath.get(position);
     }
 
-    public void ConcatImage(String imagePath2) {
-        imagePath.add(imagePath2);
-    }
-
-    public void setImageView(ArrayList<ImageView> view){
-        imageView=view;
-
-    }
-    public ArrayList<ImageView> getImageView(){
-        return imageView;
-
-    }
-    public ImageView getImageView(int position){
-        return imageView.get(position);
-
-    }
     public int getSize(){
         return imagePath.size();
     }

@@ -45,6 +45,8 @@ public class LimActivity extends AppCompatActivity {
     RecyclerView rv;
     LimAdapter mAdapter;
     static final int REQ_CODE_SELECT_IMAGE = 100;
+    static final int REQ_CODE_SELECT_TITLEIMAGE = 101;
+    static final int REQ_CODE_SELECT_MAP = 102;
     //boolean currentBold = false, currentItalic = false, currentUnderline = false;
     LinearLayout llTextWidget, llColorPicker;
     ImageButton btnSave, btnLoad, btnAdd, btnDelComp;
@@ -223,6 +225,18 @@ public class LimActivity extends AppCompatActivity {
 
             }
         });
+        btnTitleImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //이미지 클릭
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
+                intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, REQ_CODE_SELECT_TITLEIMAGE);
+                addDialog.dismiss();
+
+            }
+        });
         btnImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -242,7 +256,7 @@ public class LimActivity extends AppCompatActivity {
 
                 addDialog.dismiss();
                 Intent intent = new Intent(LimActivity.this,MapListActivity.class);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, REQ_CODE_SELECT_MAP);
                 // MapActivity로 넘어가야함함
 
             }
@@ -397,15 +411,17 @@ public class LimActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
+        if (requestCode == REQ_CODE_SELECT_MAP) {
             if(resultCode == Activity.RESULT_OK){
                 String title =data.getStringExtra("title");
                 String address =data.getStringExtra("address");
+                int mapx=data.getIntExtra("mapx",0);
+                int mapy=data.getIntExtra("mapy",0);
+                mPresenter.addCompMap(mapx,mapy,title,address);
                 showMessage(title + "\n"+address);
-
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                //만약 반환값이 없을 경우의 코드를 여기에 작성하세요.
+
             }
         }
 
@@ -423,8 +439,6 @@ public class LimActivity extends AppCompatActivity {
 
 
     }
-    public RecyclerView.ViewHolder getHolder(int position){
-        return rv.findViewHolderForAdapterPosition(position);
-    }
+
 
 }
