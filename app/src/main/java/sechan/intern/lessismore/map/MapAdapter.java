@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import sechan.intern.lessismore.R;
-import sechan.intern.lessismore.map.MapClasses.MapItem;
+import sechan.intern.lessismore.map.mapclass.MapItem;
 
 /**
  * Created by Sechan on 2017-08-07.

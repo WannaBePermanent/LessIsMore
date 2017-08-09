@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.nhn.android.maps.NMapView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,18 +18,18 @@ import sechan.intern.lessismore.lim.components.Comp;
 import sechan.intern.lessismore.lim.components.CompImage;
 import sechan.intern.lessismore.lim.components.CompMap;
 import sechan.intern.lessismore.lim.components.CompText;
-import sechan.intern.lessismore.lim.components.Enum.EnumComp;
 import sechan.intern.lessismore.lim.components.LimEditText;
+import sechan.intern.lessismore.lim.components.enumcomp.EnumComp;
 
 
 public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemTouchHelperListener {
     private LimPresenter mPresenter = null;
-    //private ImageHelper mImageHelper = ImageHelper.getInstance();
     private int mPosition = -1;
     private View mCompView = null;
     private ArrayList<Comp> mPost;
     private static final int MAX_IMAGE = 3;
-    //private static final MapHelper mapHelper = MapHelper.getInstance();
+    private static final String clientId =  "DDDCTG3Meo6SYF6duEr6";
+    private static final String packageName = "sechan.intern.lessismore";
 
     // Adapter - Presenter 형으로 바꿈
 
@@ -49,36 +48,35 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
 
     public LimAdapter(ArrayList<Comp> post) {
         mPost = post;
-        // getItemCount 베이스 구현자체에서 수량 가져와서 돌림
     }
 
 
     public class TextHolder extends LimHolder {
-        // each data item is just a string in this case
-        public LimEditText compText;
-
+        public LimEditText viewText;
         public TextHolder(View itemView) {
             super(itemView);
-            compText = itemView.findViewById(R.id.edit_comp);
+            viewText = itemView.findViewById(R.id.edit_comp);
 
         }
 
         @Override
         public void init(final LimHolder holder, int position) {
-            final LimEditText compText = ((TextHolder) holder).compText;
-
-            compText.setText(((CompText) mPost.get(position)).getText());
-
-            compText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            final CompText compText = ((CompText) mPost.get(position));
+            viewText.setText(compText.getText());
+            mPresenter.getSpan(viewText, compText);
+            viewText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean hasFocus) {
                     if (hasFocus) {
-                        mPosition = holder.getAdapterPosition();
-                        mPresenter.setCompText(compText);
+                        //mPosition = holder.getAdapterPosition();
+                        hasFocused(holder);
+                        mPresenter.setCompText(viewText);
                         mPresenter.textFocus(true);
 
-                        hasFocused(holder);
-                    } else mPresenter.textFocus(false);
+                    } else {
+                        mPresenter.textFocus(false);
+                       mPresenter.saveText(compText);
+                    }
 
                 }
             });
@@ -86,8 +84,6 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     }
 
     public class ImageHolder extends LimHolder {
-        // each data item is just a string in this case
-
         public ArrayList<ImageView> viewImage = new ArrayList<>();
 
         public ImageHolder(View itemView) {
@@ -100,14 +96,12 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
 
         @Override
         public void init(final LimHolder holder, final int position) {
-            ImageHolder imageHolder = (ImageHolder) holder;
             CompImage compImage = (CompImage) mPost.get(position);
-            //mImageHelper.setCompImage(viewImage, ((CompImage) mPost.get(position)).getImagePath());
             for (int i = 0; i < MAX_IMAGE; i++) {
-                imageHolder.viewImage.get(i).setVisibility(View.GONE);
+                viewImage.get(i).setVisibility(View.GONE);
             }
             for (int i = 0; i < compImage.getSize(); i++) {
-                imageHolder.viewImage.get(i).setVisibility(View.VISIBLE);
+                viewImage.get(i).setVisibility(View.VISIBLE);
                 Glide.with(itemView.getContext().getApplicationContext()).load(compImage.getImagePath(i)).into(viewImage.get(i));
 
             }
@@ -133,25 +127,25 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     }
 
     public class MapHolder extends LimHolder {
-        // each data item is just a string in this case
 
-        public NMapView mapView;
+        public ImageView mapImage;
         public TextView mapTitle,mapAddress;
         public MapHolder(View itemView) {
             super(itemView);
-            mapView = itemView.findViewById(R.id.mapView);
-            mapTitle = itemView.findViewById(R.id.mapTitle);
-            mapAddress = itemView.findViewById(R.id.mapAddress);
 
+            mapImage = itemView.findViewById(R.id.mapImage);
+            mapTitle = itemView.findViewById(R.id.mapTitle2);
+            mapAddress = itemView.findViewById(R.id.mapAddress2);
         }
 
         @Override
-        public void init(final LimHolder holder, int position) {
-            MapHolder mapHolder = (MapHolder)holder;
+        public void init(final LimHolder holder, final int position) {
+
             CompMap compMap = (CompMap) mPost.get(position);
-            mapHolder.mapTitle.setText(compMap.getTitle());
-            mapHolder.mapAddress.setText(compMap.getAddress());
-           mPresenter.setMapView(mapHolder.mapView,position);
+            mapTitle.setText(compMap.getTitle());
+            mapAddress.setText(compMap.getAddress());
+            String mapURL = "https://openapi.naver.com/v1/map/staticmap.bin?clientId=" + clientId+ "&url=" + packageName + "&crs=NHN:128&level=11&w=300&h=400&baselayer=default&markers="+compMap.getPointString() + "&center=" + compMap.getPointString();
+            Glide.with(itemView.getContext()).load(mapURL).into(mapImage);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -168,7 +162,9 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        int viewType = holder.getItemViewType();
+        holder.itemView.setSelected(false);
+        holder.itemView.clearFocus();
+        mPosition = -1;
         ((LimHolder) holder).init((LimHolder) holder, position);
 
     }
@@ -196,7 +192,7 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
                 viewHolder = new ImageHolder(imageView);
                 break;
             case COMP_MAP:
-                layout = R.layout.layout_comp_map;
+                layout = R.layout.layout_comp_map2;
                 View mapView = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
                 viewHolder = new MapHolder(mapView);
                 break;
@@ -223,16 +219,16 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     }
 
     private void hasFocused(RecyclerView.ViewHolder holder) {
+        if (mCompView == holder.itemView) return;
         mPresenter.setStripable(false);
         mPresenter.setDividable(false);
         mPosition = holder.getAdapterPosition();
-        mPresenter.setFocused(mPosition);
+        mPresenter.setFocused();
         if (mCompView != null) {
             mCompView.setSelected(false);
             mCompView.clearFocus();
         }
         mCompView = holder.itemView;
-
         mCompView.setSelected(true);
         mPresenter.showMessage(Integer.toString(mPosition));
     }

@@ -3,10 +3,10 @@ package sechan.intern.lessismore.lim.components;
 
 import java.util.ArrayList;
 
-import sechan.intern.lessismore.lim.components.Enum.EnumText;
-import sechan.intern.lessismore.lim.components.TextStyle.LimTextStyle;
+import sechan.intern.lessismore.lim.components.enumcomp.EnumText;
+import sechan.intern.lessismore.lim.components.textstyle.LimTextStyle;
 
-import static sechan.intern.lessismore.lim.components.Enum.EnumComp.COMP_TEXT;
+import static sechan.intern.lessismore.lim.components.enumcomp.EnumComp.COMP_TEXT;
 
 
 public class CompText extends Comp {
@@ -48,6 +48,13 @@ public class CompText extends Comp {
     }
     public String getText(){
         return text;
+    }
+    public ArrayList<LimTextStyle> getTextStyle(){
+        return textStyles;
+
+    }
+    public void clearStyle(){
+        textStyles.clear();
     }
   /*  List<Style> style;
 

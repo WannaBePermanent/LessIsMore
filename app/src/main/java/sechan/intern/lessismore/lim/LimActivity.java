@@ -2,6 +2,7 @@ package sechan.intern.lessismore.lim;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -10,27 +11,30 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.madrapps.pikolo.HSLColorPicker;
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
 
-import sechan.intern.lessismore.Model.LimRepo;
+import sechan.intern.lessismore.model.LimRepo;
 import sechan.intern.lessismore.R;
 import sechan.intern.lessismore.lim.adapter.ItemTouchHelperCallback;
 import sechan.intern.lessismore.lim.adapter.LimAdapter;
 import sechan.intern.lessismore.lim.components.Comp;
-import sechan.intern.lessismore.lim.components.Enum.EnumText;
+import sechan.intern.lessismore.lim.components.enumcomp.EnumText;
 import sechan.intern.lessismore.map.MapListActivity;
 
-import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTBOLD;
-import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTCOLOR;
-import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTDECSIZE;
-import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTINCSIZE;
-import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTITALIC;
-import static sechan.intern.lessismore.lim.components.Enum.EnumText.TEXTUNDERLINE;
+import static sechan.intern.lessismore.lim.components.enumcomp.EnumText.TEXTBOLD;
+import static sechan.intern.lessismore.lim.components.enumcomp.EnumText.TEXTCOLOR;
+import static sechan.intern.lessismore.lim.components.enumcomp.EnumText.TEXTDECSIZE;
+import static sechan.intern.lessismore.lim.components.enumcomp.EnumText.TEXTINCSIZE;
+import static sechan.intern.lessismore.lim.components.enumcomp.EnumText.TEXTITALIC;
+import static sechan.intern.lessismore.lim.components.enumcomp.EnumText.TEXTUNDERLINE;
 
 //public class LimActivity extends AppCompatActivity implements LimContract.View {
 public class LimActivity extends AppCompatActivity {
@@ -55,6 +59,9 @@ public class LimActivity extends AppCompatActivity {
     ImageButton btnInc, btnDec, btnBold, btnItalic, btnColor, btnUl;
     ImageButton btnColorOK;
     ImageButton btnImageLink, btnImageDivide;
+    EditText editTitle;
+    ImageView imageTitle;
+    boolean isTitleImage = false;
     int mColor;
 
 
@@ -67,7 +74,6 @@ public class LimActivity extends AppCompatActivity {
         rv = (RecyclerView) findViewById(R.id.rv_contents);
         rv.setLayoutManager(new LinearLayoutManager(this));
         mPresenter.start();
-
         // 다이얼로그 뷰 세팅 시작
         final AlertDialog.Builder alertBuilderAdd = new AlertDialog.Builder(
                 this);
@@ -79,10 +85,7 @@ public class LimActivity extends AppCompatActivity {
         alertBuilderAdd.setView(addDialogView);
         final AlertDialog addDialog = alertBuilderAdd.create();
         // 다이얼로그 뷰 세팅 끝
-
-
-
-
+        //mapView =
 
 
         final HSLColorPicker colorPicker = (HSLColorPicker) findViewById(R.id.colorPicker);
@@ -125,7 +128,12 @@ public class LimActivity extends AppCompatActivity {
         btnDelComp = (ImageButton) findViewById(R.id.btn_deletecomp);
         // 저장, 불러오기 컴포넌트추가 버튼 끝
 
+        //타이틀 설정
+        editTitle = (EditText) findViewById(R.id.edit_title);
         btnTitleImage = (ImageButton) findViewById(R.id.btn_titleimage);
+        imageTitle = (ImageView)findViewById(R.id.imageTitle);
+        //
+
         btnImageLink = (ImageButton) findViewById(R.id.btn_imagelink);
         btnImageDivide = (ImageButton) findViewById(R.id.btn_imagedivide);
         btnColorOK.setOnClickListener(new View.OnClickListener() {
@@ -210,6 +218,7 @@ public class LimActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //mPresenter.saveText();
                 addDialog.show();
             }
         });
@@ -229,10 +238,15 @@ public class LimActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //이미지 클릭
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
-                intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, REQ_CODE_SELECT_TITLEIMAGE);
+                if(!isTitleImage) {
+                    Intent intent = new Intent(Intent.ACTION_PICK);
+                    intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
+                    intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, REQ_CODE_SELECT_TITLEIMAGE);
+                }
+                else{
+                    mPresenter.setTitleImage(null);
+                }
                 addDialog.dismiss();
 
             }
@@ -296,7 +310,9 @@ public class LimActivity extends AppCompatActivity {
         return rv;
 
     }
-
+    public void setPresenter(LimPresenter presenter) {
+        mPresenter = presenter;
+    }
 
     public void displayComponent(int index) {
         //   mAdapter.notifyItemInserted(index);
@@ -322,9 +338,7 @@ public class LimActivity extends AppCompatActivity {
     /*public void setPresenter(@NonNull LimContract.Presenter presenter) {
         mPresenter = checkNotNull(presenter);
     }*/
-    public void setPresenter(LimPresenter presenter) {
-        mPresenter = presenter;
-    }
+
 
     public void displayTitleBackground(Comp img) {
 
@@ -358,8 +372,6 @@ public class LimActivity extends AppCompatActivity {
                 if (isSet)
                     btnBold.setColorFilter(cGreen);
                 else btnBold.clearColorFilter();
-
-
                 break;
             case TEXTITALIC:
                 if (isSet)
@@ -407,7 +419,24 @@ public class LimActivity extends AppCompatActivity {
         if (show) btnImageDivide.setVisibility(View.VISIBLE);
         else btnImageDivide.setVisibility(View.INVISIBLE);
     }
-
+    public void setTitleImage(String imagePath){
+        if (imagePath != null) {
+            Glide.with(this).load(imagePath).into(imageTitle);
+            editTitle.setTextColor(Color.WHITE);
+            btnTitleImage.setColorFilter(Color.WHITE);
+            imageTitle.setColorFilter(Color.rgb(123, 123, 123), android.graphics.PorterDuff.Mode.MULTIPLY);
+            btnTitleImage.setImageResource(R.drawable.icon_delete);
+            isTitleImage = true;
+        }
+        else{
+            editTitle.setTextColor(Color.BLACK);
+            btnTitleImage.setImageResource(R.drawable.icon_image);
+            btnTitleImage.clearColorFilter();
+            imageTitle.clearColorFilter();
+            imageTitle.setImageResource(android.R.color.transparent);
+            isTitleImage = false;
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -418,7 +447,7 @@ public class LimActivity extends AppCompatActivity {
                 int mapx=data.getIntExtra("mapx",0);
                 int mapy=data.getIntExtra("mapy",0);
                 mPresenter.addCompMap(mapx,mapy,title,address);
-                showMessage(title + "\n"+address);
+                //showMessage(title + "\n"+address);
             }
             if (resultCode == Activity.RESULT_CANCELED) {
 
@@ -430,6 +459,18 @@ public class LimActivity extends AppCompatActivity {
                 try {
 
                     mPresenter.addCompImage(data.getDataString());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        else if (requestCode == REQ_CODE_SELECT_TITLEIMAGE) {
+            if (resultCode == Activity.RESULT_OK) {
+                try {
+
+                    mPresenter.setTitleImage(data.getDataString());
+
 
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -1,4 +1,4 @@
-package sechan.intern.lessismore.lim.components.TextStyle;
+package sechan.intern.lessismore.lim.components.textstyle;
 
 
 import android.annotation.SuppressLint;

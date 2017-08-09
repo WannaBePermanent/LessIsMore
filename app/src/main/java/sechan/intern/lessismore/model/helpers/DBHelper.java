@@ -1,4 +1,4 @@
-package sechan.intern.lessismore.Model.helpers;
+package sechan.intern.lessismore.model.helpers;
 
 public class DBHelper {
     // private final Post instance;

@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".map.MapListActivity" />
-        <activity android:name=".map.MapTestActivity" />
+
     </application>
 
 </manifest>

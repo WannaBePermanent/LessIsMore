@@ -3,7 +3,7 @@ package sechan.intern.lessismore.lim.components;
 
 import java.util.ArrayList;
 
-import static sechan.intern.lessismore.lim.components.Enum.EnumComp.COMP_IMAGE;
+import static sechan.intern.lessismore.lim.components.enumcomp.EnumComp.COMP_IMAGE;
 
 public class CompImage extends Comp {
     private ArrayList<String> imagePath = new ArrayList<>();

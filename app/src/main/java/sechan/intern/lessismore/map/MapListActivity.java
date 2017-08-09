@@ -17,9 +17,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import sechan.intern.lessismore.R;
-import sechan.intern.lessismore.map.MapClasses.ApiService;
-import sechan.intern.lessismore.map.MapClasses.MapItem;
-import sechan.intern.lessismore.map.MapClasses.MapResult;
+import sechan.intern.lessismore.map.mapclass.ApiService;
+import sechan.intern.lessismore.map.mapclass.MapItem;
+import sechan.intern.lessismore.map.mapclass.MapResult;
 
 /**
  * Created by Sechan on 2017-08-07.

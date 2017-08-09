@@ -1,23 +1,20 @@
-package sechan.intern.lessismore.Model;
+package sechan.intern.lessismore.model;
 
-
-import com.nhn.android.maps.maplib.NGeoPoint;
 
 import java.util.ArrayList;
 
-import sechan.intern.lessismore.Model.helpers.DBHelper;
-import sechan.intern.lessismore.Model.helpers.MapHelper;
 import sechan.intern.lessismore.lim.components.Comp;
 import sechan.intern.lessismore.lim.components.CompImage;
 import sechan.intern.lessismore.lim.components.CompMap;
 import sechan.intern.lessismore.lim.components.CompText;
+import sechan.intern.lessismore.model.helpers.DBHelper;
 
 public class LimRepo {
     // Singleton Pattern 적용, Factory Static Method
     private static LimRepo instance = null;
     private static final ArrayList<Comp> mPost = new ArrayList<>();
-    private static final MapHelper mapHelper = MapHelper.getInstance();
     private static final DBHelper dbHelper = DBHelper.getInstance();
+    private String titleImage = null;
     // 헬퍼들을 모두 정적 팩토리 메소드를 이용해 생성 getInstance();
     // Repo에 다 연결시켜놓는다.
 
@@ -65,9 +62,16 @@ public class LimRepo {
         return 0;
     }
 
-    public int addCompMap(NGeoPoint point, String title, String address){
+    /*public int addCompMap(NGeoPoint point, String title, String address){
         mPost.add(new CompMap(point,title,address));
         return 0;
+    }*/
+    public int addCompMap(int mapx, int mapy, String title, String address){
+        mPost.add(new CompMap(mapx,mapy,title,address));
+        return 0;
+    }
+    public void setTitleImage(String imagePath){
+        titleImage = imagePath;
     }
 
 
