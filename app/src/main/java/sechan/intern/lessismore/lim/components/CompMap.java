@@ -10,7 +10,7 @@ public class CompMap extends Comp {
     int mapy;
     String title;
     String address;
-    boolean map=false;
+    //boolean map=false;
 /*
     public CompMap(NGeoPoint point, String title, String address) {
         super(COMP_MAP);
@@ -40,12 +40,12 @@ public CompMap(int x, int y, String title, String address) {
 public String getPointString(){
     return Integer.toString(mapx) + "," +Integer.toString(mapy);
 }
-    public void setMap(boolean bool){
+/*    public void setMap(boolean bool){
         map = bool;
     }
     public boolean getMap(){
         return map;
 
-    }
+    }*/
 
 }

@@ -28,7 +28,7 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     private View mCompView = null;
     private ArrayList<Comp> mPost;
     private static final int MAX_IMAGE = 3;
-    private static final String clientId =  "DDDCTG3Meo6SYF6duEr6";
+    private static final String clientId = "DDDCTG3Meo6SYF6duEr6";
     private static final String packageName = "sechan.intern.lessismore";
 
     // Adapter - Presenter 형으로 바꿈
@@ -53,6 +53,7 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
 
     public class TextHolder extends LimHolder {
         public LimEditText viewText;
+
         public TextHolder(View itemView) {
             super(itemView);
             viewText = itemView.findViewById(R.id.edit_comp);
@@ -72,10 +73,9 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
                         hasFocused(holder);
                         mPresenter.setCompText(viewText);
                         mPresenter.textFocus(true);
-
                     } else {
                         mPresenter.textFocus(false);
-                       mPresenter.saveText(compText);
+                        mPresenter.saveText(compText);
                     }
 
                 }
@@ -107,7 +107,6 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
             }
 
 
-
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -129,7 +128,8 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     public class MapHolder extends LimHolder {
 
         public ImageView mapImage;
-        public TextView mapTitle,mapAddress;
+        public TextView mapTitle, mapAddress;
+
         public MapHolder(View itemView) {
             super(itemView);
 
@@ -144,13 +144,14 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
             CompMap compMap = (CompMap) mPost.get(position);
             mapTitle.setText(compMap.getTitle());
             mapAddress.setText(compMap.getAddress());
-            String mapURL = "https://openapi.naver.com/v1/map/staticmap.bin?clientId=" + clientId+ "&url=" + packageName + "&crs=NHN:128&level=11&w=300&h=400&baselayer=default&markers="+compMap.getPointString() + "&center=" + compMap.getPointString();
+            String mapURL = "https://openapi.naver.com/v1/map/staticmap.bin?clientId=" + clientId + "&url=" + packageName + "&crs=NHN:128&level=11&w=300&h=400&baselayer=default&markers=" + compMap.getPointString() + "&center=" + compMap.getPointString();
             Glide.with(itemView.getContext()).load(mapURL).into(mapImage);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     hasFocused(holder);
-                }});
+                }
+            });
         }
     }
 

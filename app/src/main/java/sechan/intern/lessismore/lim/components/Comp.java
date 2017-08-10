@@ -8,6 +8,7 @@ public class Comp {
         return type;
     }
     public Comp(EnumComp type){
+
         this.type = type;
 
     }

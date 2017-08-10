@@ -21,13 +21,12 @@ import com.bumptech.glide.Glide;
 import com.madrapps.pikolo.HSLColorPicker;
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
 
-import sechan.intern.lessismore.model.LimRepo;
 import sechan.intern.lessismore.R;
 import sechan.intern.lessismore.lim.adapter.ItemTouchHelperCallback;
 import sechan.intern.lessismore.lim.adapter.LimAdapter;
-import sechan.intern.lessismore.lim.components.Comp;
 import sechan.intern.lessismore.lim.components.enumcomp.EnumText;
 import sechan.intern.lessismore.map.MapListActivity;
+import sechan.intern.lessismore.model.LimRepo;
 
 import static sechan.intern.lessismore.lim.components.enumcomp.EnumText.TEXTBOLD;
 import static sechan.intern.lessismore.lim.components.enumcomp.EnumText.TEXTCOLOR;
@@ -51,7 +50,6 @@ public class LimActivity extends AppCompatActivity {
     static final int REQ_CODE_SELECT_IMAGE = 100;
     static final int REQ_CODE_SELECT_TITLEIMAGE = 101;
     static final int REQ_CODE_SELECT_MAP = 102;
-    //boolean currentBold = false, currentItalic = false, currentUnderline = false;
     LinearLayout llTextWidget, llColorPicker;
     ImageButton btnSave, btnLoad, btnAdd, btnDelComp;
     ImageButton btnText, btnImage, btnMap;
@@ -77,15 +75,20 @@ public class LimActivity extends AppCompatActivity {
         // 다이얼로그 뷰 세팅 시작
         final AlertDialog.Builder alertBuilderAdd = new AlertDialog.Builder(
                 this);
-
         final LayoutInflater addInflater = this.getLayoutInflater();
         final View addDialogView = addInflater.inflate(R.layout.layout_add_dialog, null);
-
-
         alertBuilderAdd.setView(addDialogView);
         final AlertDialog addDialog = alertBuilderAdd.create();
         // 다이얼로그 뷰 세팅 끝
-        //mapView =
+
+        // 저장 목록 뷰 시작
+        final AlertDialog.Builder alertBuilderLoad = new AlertDialog.Builder(
+                this);
+        final LayoutInflater loadInflater = this.getLayoutInflater();
+        final View loadDialogView = loadInflater.inflate(R.layout.layout_loadlist, null);
+        alertBuilderLoad.setView(loadDialogView);
+        final AlertDialog loadDialog = alertBuilderLoad.create();
+        // 저장 목록 뷰 끝
 
 
         final HSLColorPicker colorPicker = (HSLColorPicker) findViewById(R.id.colorPicker);
@@ -101,9 +104,6 @@ public class LimActivity extends AppCompatActivity {
         });
         llTextWidget = (LinearLayout) findViewById(R.id.ll_textwidget);
         llColorPicker = (LinearLayout) findViewById(R.id.llColorPicker);
-
-
-
 
         // 컴포넌트들 추가 버튼
         btnMap = (ImageButton) addDialogView.findViewById(R.id.btn_map);
@@ -193,7 +193,7 @@ public class LimActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //mPresenter.save();
-                mPresenter.save();
+                mPresenter.save2(editTitle.getText().toString());
 
 
 
@@ -212,7 +212,9 @@ public class LimActivity extends AppCompatActivity {
         btnLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //mPresenter.loadList();
+                mPresenter.loadList();
+                loadDialog.show();
+
             }
         });
         btnAdd.setOnClickListener(new View.OnClickListener() {
@@ -312,36 +314,6 @@ public class LimActivity extends AppCompatActivity {
     }
     public void setPresenter(LimPresenter presenter) {
         mPresenter = presenter;
-    }
-
-    public void displayComponent(int index) {
-        //   mAdapter.notifyItemInserted(index);
-            //mAdapter.notifyDataSetChanged();
-    } //
-
-    public void displayComponent() {
-        //mAdapter.notifyDataSetChanged();
-        //mAdapter.notifyItemInserted(0);
-        // mAdapter.notifyItemRemoved(0);
-        // 추후 성능을 위해 위 두개 함수로 대체할 것
-    } //전체 한번에 표시
-
-    public void displayComponent(Comp comp, int index) {
-
-
-    } //한개만 삽입하거나 추가할때
-
-    public void deleteComponent(int index) {
-
-    } // 삭제는 인덱스만 필요함
-
-    /*public void setPresenter(@NonNull LimContract.Presenter presenter) {
-        mPresenter = checkNotNull(presenter);
-    }*/
-
-
-    public void displayTitleBackground(Comp img) {
-
     }
 
     public void showSaved() {

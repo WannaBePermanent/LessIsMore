@@ -60,7 +60,7 @@ public class LimPresenter {
     }
 
     public int addCompText() {
-        // mRepo.savePostInstance(); 먼저 상태 저장해야함
+        // mRepo.save(); 먼저 상태 저장해야함
 
         int ret = mRepo.addCompText();
         if (ret >= 0) {
@@ -124,6 +124,16 @@ public class LimPresenter {
     }
 
 
+    public void save2(String title){
+        int position = mAdapter.getPosition();
+        if (position >=0){
+            Comp comp = mPost.get(position);
+            if (comp instanceof CompText) mTextHelper.saveText((CompText)comp);
+        }
+        mRepo.setTitle(title);
+        mRepo.save();
+
+    }
     public boolean save(Date date) {
         return false;
 
@@ -160,35 +170,10 @@ public class LimPresenter {
         //removeComp();
     }
 
-    public boolean save() {
-        mAdapter.saveText();
-        return false;
-    } //저장
-
-    public void saveTextStyle(int position, EnumText type, int start, int end, int attr) {
-        mRepo.getCompText(position).saveTextStyle(type, start, end, attr);
-        //mRepo.saveTextStyle(position, type,start,end,attr);
-
-    }
-
-    public void saveTextStyle(int position, EnumText type, int start, int end) {
-        mRepo.getCompText(position).saveTextStyle(type, start, end);
-        //mRepo.saveTextStyle(position, type,start,end);
-    }
-
-    public void saveText(int position, String str) {
-        mRepo.getCompText(position).saveText(str);
-    }
-
     public ArrayList<Comp> load(int index) {
         return null;
     }
     //불러오기
-
-    public boolean setTitleBackground(String imagePath) {
-        return false;
-
-    } // 리턴과 파라메터 수정해야할지도 모름
 
     public void loadList() {
 
@@ -261,9 +246,7 @@ public class LimPresenter {
     public void setCompText(LimEditText viewText) {
         mTextHelper.setCompText(viewText);
     }
-    public void setCompText(LimEditText viewText,CompText compText) {
-        mTextHelper.setCompText(viewText,compText);
-    }
+
     public void saveText(CompText compText) {
         mTextHelper.saveText(compText);
     }

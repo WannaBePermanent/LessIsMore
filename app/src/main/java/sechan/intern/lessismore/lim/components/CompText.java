@@ -55,6 +55,7 @@ public class CompText extends Comp {
     }
     public void clearStyle(){
         textStyles.clear();
+
     }
   /*  List<Style> style;
 
