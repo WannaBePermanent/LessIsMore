@@ -71,7 +71,7 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
                     if (hasFocus) {
                         //mPosition = holder.getAdapterPosition();
                         hasFocused(holder);
-                        mPresenter.setCompText(viewText);
+                        mPresenter.setCompText(viewText,holder.getAdapterPosition());
                         mPresenter.textFocus(true);
                     } else {
                         mPresenter.textFocus(false);
@@ -220,10 +220,10 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     }
 
     private void hasFocused(RecyclerView.ViewHolder holder) {
+        mPosition = holder.getAdapterPosition();
         if (mCompView == holder.itemView) return;
         mPresenter.setStripable(false);
         mPresenter.setDividable(false);
-        mPosition = holder.getAdapterPosition();
         mPresenter.setFocused();
         if (mCompView != null) {
             mCompView.setSelected(false);

@@ -1,7 +1,7 @@
 package sechan.intern.lessismore.model;
 
 
-import android.util.Log;
+import android.content.Context;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,14 +16,19 @@ import sechan.intern.lessismore.lim.components.CompDeserializer;
 import sechan.intern.lessismore.lim.components.CompImage;
 import sechan.intern.lessismore.lim.components.CompMap;
 import sechan.intern.lessismore.lim.components.CompText;
+import sechan.intern.lessismore.model.helpers.DBData;
+import sechan.intern.lessismore.model.helpers.DBHelper;
 
 public class LimRepo {
     // Singleton Pattern 적용, Factory Static Method
     private static LimRepo instance = null;
     private static final ArrayList<Comp> mPost = new ArrayList<>();
-    //private static final DBHelper dbHelper = DBHelper.getInstance();
+    private ArrayList<LimArticle> mArticles;
+    private DBHelper dbHelper;
     private String titleImage = null;
     private String title = null;
+    Gson gson = new GsonBuilder().registerTypeAdapter(mPost.getClass(), new CompDeserializer()).create();
+    ArrayList<DBData> mDbData;
     // 헬퍼들을 모두 정적 팩토리 메소드를 이용해 생성 getInstance();
     // Repo에 다 연결시켜놓는다.
 
@@ -33,6 +38,10 @@ public class LimRepo {
             instance = new LimRepo();
         }
         return instance;
+    }
+
+    public void setDBHelper(Context context) {
+        dbHelper = DBHelper.getInstance(context);
     }
 
     public static void destroyInstance() {
@@ -48,7 +57,7 @@ public class LimRepo {
         Comp compText = new CompText();
         if (compText != null) {
             mPost.add(compText);
-            return mPost.size()-1;
+            return mPost.size() - 1;
         }
         return 0;
 
@@ -58,10 +67,11 @@ public class LimRepo {
         Comp compImage = new CompImage(imagePath);
         if (compImage != null) {
             mPost.add(compImage);
-            return mPost.size()-1;
+            return mPost.size() - 1;
         }
         return 0;
     }
+
     public int addCompImage(String imagePath, int position) {
         Comp compImage = new CompImage(imagePath);
         if (compImage != null) {
@@ -75,57 +85,78 @@ public class LimRepo {
         mPost.add(new CompMap(point,title,address));
         return 0;
     }*/
-    public int addCompMap(int mapx, int mapy, String title, String address){
-        mPost.add(new CompMap(mapx,mapy,title,address));
+    public int addCompMap(int mapx, int mapy, String title, String address) {
+        mPost.add(new CompMap(mapx, mapy, title, address));
         return 0;
     }
-    public void setTitleImage(String imagePath){
+
+    public void setTitleImage(String imagePath) {
         titleImage = imagePath;
     }
-    public void setTitle(String title){
+
+    public String getTitleImage() {
+        return titleImage;
+    }
+
+    public String getTitleText() {
+        return title;
+    }
+
+    public void setTitle(String title) {
         this.title = title;
     }
 
 
-    public int save(){
+    public int saveArticle() {
         DateFormat df = new SimpleDateFormat("yyyy'년' MM'월' dd'일' HH:mm:ss");
         String date = df.format(Calendar.getInstance().getTime());
-        LimArticle article = new LimArticle(title,titleImage,mPost,date);
-        Gson gson = new GsonBuilder().registerTypeAdapter(mPost.getClass(), new CompDeserializer()).create();
+        LimArticle article = new LimArticle(title, titleImage, mPost, date);
+
         String jsonArticle = gson.toJson(article);
-        Log.i("lim",jsonArticle);
+        dbHelper.insertArticle(jsonArticle);
 
-
-          return 0;
-
-    }
-
-    public int load(){
 
         return 0;
-    }
-/*    public void saveTextStyle(int position, int type, int start, int end, int attr){
-        ((CompText) mPost.get(position)).saveTextStyle(type,start,end,attr);
 
     }
-    public void saveTextStyle(int position, int type, int start, int end){
-        ((CompText) mPost.get(position)).saveTextStyle(type,start,end);
-    }
-    public void saveText(int position, String str){
-        ((CompText) mPost.get(position)).saveText(str);
-    }
-    //mPresenter와 역할이 겹치는 것은 mPresenter에서 Repo를 불러와서 처리하는 식으로 바꾸기
-    */
 
+    public void removeArticle(int position) {
+        //int pos = mArticles.size()-position-1;
+       //mArticles.remove(position);
+        dbHelper.removeArticle(mDbData.get(position).getId());
+
+    }
+
+    public void loadArticle(int position) {
+        LimArticle article = mArticles.get(position);
+        mPost.clear();
+        mPost.addAll(article.getPost());
+        title = article.getTitle();
+        titleImage = article.getTitleImage();
+
+
+    }
+
+    public ArrayList<LimArticle> loadArticleList() {
+        ArrayList<LimArticle> articles = new ArrayList<>();
+        mDbData = dbHelper.getArticles();
+        for (DBData dbItem : mDbData) {
+            articles.add(gson.fromJson(dbItem.getJsonData(), LimArticle.class));
+            //Collections.reverse(articles);
+        }
+        mArticles = articles;
+        return articles;
+    }
 
     public ArrayList<Comp> getPost() {
         return mPost;
     }
 
-    public Comp getComp(int position){
+    public Comp getComp(int position) {
         return mPost.get(position);
     }
-    public CompText getCompText(int position){
+
+    public CompText getCompText(int position) {
         return (CompText) mPost.get(position);
     }
 

@@ -11,10 +11,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -24,6 +26,7 @@ import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
 import sechan.intern.lessismore.R;
 import sechan.intern.lessismore.lim.adapter.ItemTouchHelperCallback;
 import sechan.intern.lessismore.lim.adapter.LimAdapter;
+import sechan.intern.lessismore.lim.adapter.LoadAdapter;
 import sechan.intern.lessismore.lim.components.enumcomp.EnumText;
 import sechan.intern.lessismore.map.MapListActivity;
 import sechan.intern.lessismore.model.LimRepo;
@@ -40,18 +43,19 @@ public class LimActivity extends AppCompatActivity {
     // 액티비티에서 직접 뷰 구현
 
 
-
     //private LimContract.Presenter mPresenter;
     private static final int cGreen = -16726212; // 네이버 녹색상
     private LimPresenter mPresenter;
 
     RecyclerView rv;
     LimAdapter mAdapter;
+
     static final int REQ_CODE_SELECT_IMAGE = 100;
     static final int REQ_CODE_SELECT_TITLEIMAGE = 101;
     static final int REQ_CODE_SELECT_MAP = 102;
+
     LinearLayout llTextWidget, llColorPicker;
-    ImageButton btnSave, btnLoad, btnAdd, btnDelComp;
+    ImageButton btnSave, btnLoad, btnAdd, btnRemoveComp;
     ImageButton btnText, btnImage, btnMap;
     ImageButton btnTitleImage;
     ImageButton btnInc, btnDec, btnBold, btnItalic, btnColor, btnUl;
@@ -61,7 +65,10 @@ public class LimActivity extends AppCompatActivity {
     ImageView imageTitle;
     boolean isTitleImage = false;
     int mColor;
+    int articlePosition = -1;
 
+    ListView lvLoad;
+    ImageButton btnLoadArticle, btnRemoveArticle;
 
 
     @Override
@@ -85,7 +92,7 @@ public class LimActivity extends AppCompatActivity {
         final AlertDialog.Builder alertBuilderLoad = new AlertDialog.Builder(
                 this);
         final LayoutInflater loadInflater = this.getLayoutInflater();
-        final View loadDialogView = loadInflater.inflate(R.layout.layout_loadlist, null);
+        final View loadDialogView = loadInflater.inflate(R.layout.layout_load_list, null);
         alertBuilderLoad.setView(loadDialogView);
         final AlertDialog loadDialog = alertBuilderLoad.create();
         // 저장 목록 뷰 끝
@@ -125,13 +132,21 @@ public class LimActivity extends AppCompatActivity {
         btnSave = (ImageButton) findViewById(R.id.btn_save);
         btnLoad = (ImageButton) findViewById(R.id.btn_load);
         btnAdd = (ImageButton) findViewById(R.id.btn_add);
-        btnDelComp = (ImageButton) findViewById(R.id.btn_deletecomp);
+        btnRemoveComp = (ImageButton) findViewById(R.id.btn_deletecomp);
         // 저장, 불러오기 컴포넌트추가 버튼 끝
+
+        //불러오기 다이얼로그 버튼 가져오기
+        lvLoad = loadDialogView.findViewById(R.id.lvLoad);
+        btnLoadArticle = loadDialogView.findViewById(R.id.btnLoadArticle);
+        btnRemoveArticle = loadDialogView.findViewById(R.id.btnDeleteArticle);
+
+
+        //불러오기 다이얼로그 끝
 
         //타이틀 설정
         editTitle = (EditText) findViewById(R.id.edit_title);
         btnTitleImage = (ImageButton) findViewById(R.id.btn_titleimage);
-        imageTitle = (ImageView)findViewById(R.id.imageTitle);
+        imageTitle = (ImageView) findViewById(R.id.imageTitle);
         //
 
         btnImageLink = (ImageButton) findViewById(R.id.btn_imagelink);
@@ -192,19 +207,17 @@ public class LimActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //mPresenter.save();
-                mPresenter.save2(editTitle.getText().toString());
-
+                //mPresenter.saveArticle();
+                mPresenter.saveArticle(editTitle.getText().toString());
 
 
             }
         });
-        btnDelComp.setOnClickListener(new View.OnClickListener() {
+        btnRemoveComp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //mPresenter.save();
+                //mPresenter.saveArticle();
                 mPresenter.removeComp();
-
 
 
             }
@@ -212,9 +225,39 @@ public class LimActivity extends AppCompatActivity {
         btnLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.loadList();
+                articlePosition = -1;
+                LoadAdapter loadAdapter = new LoadAdapter(mPresenter.loadArticleList());
+                lvLoad.setAdapter(loadAdapter);
+                lvLoad.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView parent, View v, int position, long id) {
+                        v.setSelected(true);
+                        articlePosition = position;
+                    }
+                });
+
+
                 loadDialog.show();
 
+            }
+        });
+        btnLoadArticle.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                if (articlePosition >=0) {
+                    loadDialog.dismiss();
+                    mPresenter.loadArticle(articlePosition);
+                }
+            }
+        });
+        btnRemoveArticle.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                if (articlePosition >=0) {
+                    loadDialog.dismiss();
+                    mPresenter.removeArticle(articlePosition);
+
+                }
             }
         });
         btnAdd.setOnClickListener(new View.OnClickListener() {
@@ -240,13 +283,12 @@ public class LimActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //이미지 클릭
-                if(!isTitleImage) {
+                if (!isTitleImage) {
                     Intent intent = new Intent(Intent.ACTION_PICK);
                     intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
                     intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(intent, REQ_CODE_SELECT_TITLEIMAGE);
-                }
-                else{
+                } else {
                     mPresenter.setTitleImage(null);
                 }
                 addDialog.dismiss();
@@ -267,19 +309,16 @@ public class LimActivity extends AppCompatActivity {
         });
 
         btnMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                                      @Override
+                                      public void onClick(View view) {
 
-                addDialog.dismiss();
-                Intent intent = new Intent(LimActivity.this,MapListActivity.class);
-                startActivityForResult(intent, REQ_CODE_SELECT_MAP);
-                // MapActivity로 넘어가야함함
+                                          addDialog.dismiss();
+                                          Intent intent = new Intent(LimActivity.this, MapListActivity.class);
+                                          startActivityForResult(intent, REQ_CODE_SELECT_MAP);
+                                          // MapActivity로 넘어가야함함
 
-            }
-        }
-
-
-
+                                      }
+                                  }
 
 
         );
@@ -297,7 +336,6 @@ public class LimActivity extends AppCompatActivity {
         });
 
 
-
     }
 
     public void setAdapter(LimAdapter adapter) {
@@ -308,10 +346,12 @@ public class LimActivity extends AppCompatActivity {
 
 
     }
-    public RecyclerView getRecyclerView(){
+
+    public RecyclerView getRecyclerView() {
         return rv;
 
     }
+
     public void setPresenter(LimPresenter presenter) {
         mPresenter = presenter;
     }
@@ -336,7 +376,7 @@ public class LimActivity extends AppCompatActivity {
     }
 
 
-        public void setBtn(EnumText style, boolean isSet) {
+    public void setBtn(EnumText style, boolean isSet) {
 
 
         switch (style) {
@@ -362,10 +402,12 @@ public class LimActivity extends AppCompatActivity {
         }
 
     }
-    public void showRemoveButton(boolean isVisible){
-        if (isVisible) btnDelComp.setVisibility(View.VISIBLE);
-        else btnDelComp.setVisibility(View.INVISIBLE);
+
+    public void showRemoveButton(boolean isVisible) {
+        if (isVisible) btnRemoveComp.setVisibility(View.VISIBLE);
+        else btnRemoveComp.setVisibility(View.INVISIBLE);
     }
+
     public void setBtn(EnumText style, int color) {
         btnColor.setColorFilter(color);
     }
@@ -383,15 +425,18 @@ public class LimActivity extends AppCompatActivity {
 
 
     }
+
     public void showStripBtn(boolean show) {
         if (show) btnImageLink.setVisibility(View.VISIBLE);
         else btnImageLink.setVisibility(View.INVISIBLE);
     }
+
     public void showDivideBtn(boolean show) {
         if (show) btnImageDivide.setVisibility(View.VISIBLE);
         else btnImageDivide.setVisibility(View.INVISIBLE);
     }
-    public void setTitleImage(String imagePath){
+
+    public void setTitleImage(String imagePath) {
         if (imagePath != null) {
             Glide.with(this).load(imagePath).into(imageTitle);
             editTitle.setTextColor(Color.WHITE);
@@ -399,8 +444,7 @@ public class LimActivity extends AppCompatActivity {
             imageTitle.setColorFilter(Color.rgb(123, 123, 123), android.graphics.PorterDuff.Mode.MULTIPLY);
             btnTitleImage.setImageResource(R.drawable.icon_delete);
             isTitleImage = true;
-        }
-        else{
+        } else {
             editTitle.setTextColor(Color.BLACK);
             btnTitleImage.setImageResource(R.drawable.icon_image);
             btnTitleImage.clearColorFilter();
@@ -409,24 +453,25 @@ public class LimActivity extends AppCompatActivity {
             isTitleImage = false;
         }
     }
+    public void setTitleText(String title){
+        editTitle.setText(title);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQ_CODE_SELECT_MAP) {
-            if(resultCode == Activity.RESULT_OK){
-                String title =data.getStringExtra("title");
-                String address =data.getStringExtra("address");
-                int mapx=data.getIntExtra("mapx",0);
-                int mapy=data.getIntExtra("mapy",0);
-                mPresenter.addCompMap(mapx,mapy,title,address);
+            if (resultCode == Activity.RESULT_OK) {
+                String title = data.getStringExtra("title");
+                String address = data.getStringExtra("address");
+                int mapx = data.getIntExtra("mapx", 0);
+                int mapy = data.getIntExtra("mapy", 0);
+                mPresenter.addCompMap(mapx, mapy, title, address);
                 //showMessage(title + "\n"+address);
             }
             if (resultCode == Activity.RESULT_CANCELED) {
 
             }
-        }
-
-       else if (requestCode == REQ_CODE_SELECT_IMAGE) {
+        } else if (requestCode == REQ_CODE_SELECT_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
 
@@ -436,8 +481,7 @@ public class LimActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        }
-        else if (requestCode == REQ_CODE_SELECT_TITLEIMAGE) {
+        } else if (requestCode == REQ_CODE_SELECT_TITLEIMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
 

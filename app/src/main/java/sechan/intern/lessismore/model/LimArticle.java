@@ -9,9 +9,34 @@ import sechan.intern.lessismore.lim.components.Comp;
  */
 
 public class LimArticle {
+    int id;
     String title;
     String date;
     String titleImage;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getTitleImage() {
+        return titleImage;
+    }
+
+
+
+    public ArrayList<Comp> getPost() {
+        return post;
+    }
+
+
     ArrayList<Comp> post;
     public LimArticle(String title, String titleimg,ArrayList<Comp> post,String date){
         this.title=title;

@@ -3,7 +3,6 @@ package sechan.intern.lessismore.lim;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import sechan.intern.lessismore.lim.adapter.LimAdapter;
 import sechan.intern.lessismore.lim.components.Comp;
@@ -11,6 +10,7 @@ import sechan.intern.lessismore.lim.components.CompImage;
 import sechan.intern.lessismore.lim.components.CompText;
 import sechan.intern.lessismore.lim.components.LimEditText;
 import sechan.intern.lessismore.lim.components.enumcomp.EnumText;
+import sechan.intern.lessismore.model.LimArticle;
 import sechan.intern.lessismore.model.LimRepo;
 import sechan.intern.lessismore.model.helpers.TextHelper;
 
@@ -37,10 +37,9 @@ public class LimPresenter {
         mPost = mRepo.getPost();
         mView = view;
         mView.setPresenter(this);
+        mRepo.setDBHelper(mView.getApplicationContext());
         mTextHelper = TextHelper.getInstance();
         mTextHelper.setPresenter(this);
-
-
         mAdapter = new LimAdapter(mRepo.getPost());
         mAdapter.setPresenter(this);
     }
@@ -55,12 +54,10 @@ public class LimPresenter {
     public void setTitleImage(String imagePath) {
         mRepo.setTitleImage(imagePath);
         mView.setTitleImage(imagePath);
-
-
     }
 
     public int addCompText() {
-        // mRepo.save(); 먼저 상태 저장해야함
+        // mRepo.saveArticle(); 먼저 상태 저장해야함
 
         int ret = mRepo.addCompText();
         if (ret >= 0) {
@@ -103,11 +100,10 @@ public class LimPresenter {
 
     public int addCompMap(int mapx, int mapy, String title, String address) {
         //mRepo.addCompMap(mMapHelper.convert(mapx, mapy), title, address);
-        mRepo.addCompMap(mapx,mapy, title, address);
+        mRepo.addCompMap(mapx, mapy, title, address);
         mAdapter.notifyDataSetChanged();
         return 0;
     }
-
 
 
     public void removeComp() {
@@ -119,25 +115,28 @@ public class LimPresenter {
             //  mAdapter.notifyItemRangeChanged(position,mRepo.getPost().size());
             //mAdapter.notifyDataSetChanged();
 
+
             hideBtn();
         }
     }
 
 
-    public void save2(String title){
-        int position = mAdapter.getPosition();
-        if (position >=0){
+    public void saveArticle(String title) {
+/*        int position = mAdapter.getPosition();
+        if (position >= 0) {
             Comp comp = mPost.get(position);
-            if (comp instanceof CompText) mTextHelper.saveText((CompText)comp);
-        }
+            if (comp instanceof CompText) mTextHelper.saveText((CompText) comp);
+        }*/
+        mTextHelper.saveText();
         mRepo.setTitle(title);
-        mRepo.save();
+        mRepo.saveArticle();
+        showMessage("저장되었습니다.");
 
     }
-    public boolean save(Date date) {
-        return false;
-
-    } //저장
+    public void removeArticle(int position) {
+        mRepo.removeArticle(position);
+        showMessage("삭제되었습니다.");
+    }
 
     public void setStripable(boolean strip) {
         mView.showStripBtn(strip);
@@ -170,12 +169,20 @@ public class LimPresenter {
         //removeComp();
     }
 
-    public ArrayList<Comp> load(int index) {
-        return null;
+    public void loadArticle(int position) {
+        mRepo.loadArticle(position);
+        mView.setTitleImage(mRepo.getTitleImage());
+        mView.setTitleText(mRepo.getTitleText());
+        mAdapter.notifyDataSetChanged();
+
     }
     //불러오기
 
-    public void loadList() {
+    //불러오기
+
+
+    public ArrayList<LimArticle> loadArticleList() {
+        return mRepo.loadArticleList();
 
     }
 
@@ -243,8 +250,8 @@ public class LimPresenter {
         mView.showMessage(str);
     }
 
-    public void setCompText(LimEditText viewText) {
-        mTextHelper.setCompText(viewText);
+    public void setCompText(LimEditText viewText, int position) {
+        mTextHelper.setCompText(viewText, mRepo.getCompText(position));
     }
 
     public void saveText(CompText compText) {
@@ -252,7 +259,7 @@ public class LimPresenter {
     }
 
     public void getSpan(LimEditText editText, CompText compText) {
-        mTextHelper.getSpan(editText,compText);
+        mTextHelper.getSpan(editText, compText);
     }
 
     public void setDividable(boolean dividable) {

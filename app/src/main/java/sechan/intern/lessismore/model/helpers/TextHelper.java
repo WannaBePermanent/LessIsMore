@@ -246,7 +246,9 @@ public class TextHelper {
         }
     }
 
-
+    public void saveText(){
+     if (mCompText != null)   saveText(mCompText);
+    }
     public void saveText(CompText compText) {
         compText.saveText(mEdit.getText().toString());
         Spannable tempSpan = mEdit.getText();
@@ -272,7 +274,8 @@ public class TextHelper {
             colorElement.end = tempSpan.getSpanEnd(colorElement);
             compText.saveTextStyle(TEXTCOLOR, colorElement.start, colorElement.end, colorElement.getForegroundColor());
         }
-        for (LimAbsoluteSizeSpan sizeElement : sizeSpan) {
+        for (LimAbsoluteSizeSpan sizeElement : sizeSpan)
+        {
             sizeElement.start = tempSpan.getSpanStart(sizeElement);
             sizeElement.end = tempSpan.getSpanEnd(sizeElement);
             compText.saveTextStyle(TEXTSIZE, sizeElement.start, sizeElement.end, sizeElement.getSize());

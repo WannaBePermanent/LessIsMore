@@ -2,26 +2,23 @@ package sechan.intern.lessismore.model.helpers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
 
 public class DBHelper extends SQLiteOpenHelper {
     // private final Post instance;
     private static DBHelper instance = null;
 
-    public DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    private DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
-    public DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, DatabaseErrorHandler errorHandler) {
-        super(context, name, factory, version, errorHandler);
-    }
 
-    public static DBHelper getInstance(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+ public static DBHelper getInstance(Context context) {
         if (instance == null) {
-            instance = new DBHelper(context,name,factory,version);
-
+            instance = new DBHelper(context,"lessismore.db",null,1);
         }
         return instance;
     }
@@ -43,50 +40,35 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db); // 다시 테이블 생성
     }
 
-    public void insert(String JSONDATA) {
+    public void insertArticle(String jsonData) {
         // 읽고 쓰기가 가능하게 DB 열기
         SQLiteDatabase db = getWritableDatabase();
         // DB에 입력한 값으로 행 추가
-        db.execSQL("INSERT INTO LIMDATA VALUES(null, '" + JSONDATA + "');");
+        db.execSQL("INSERT INTO LIMDATA VALUES(null, '" + jsonData + "');");
         db.close();
     }
 
 
-    public String getResult() {
+    public ArrayList<DBData> getArticles() {
         // 읽기가 가능하게 DB 열기
         SQLiteDatabase db = getReadableDatabase();
-        String result = "";
+        ArrayList<DBData> dbData = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM LIMDATA", null);
         while (cursor.moveToNext()) {
-            result += "번호 : " + cursor.getString(0)
+            /*result += "번호 : " + cursor.getString(0)
                     + "\n데이터 : "
-                    + cursor.getString(1)+"\n";
+                    + cursor.getString(1)+"\n";*/
+            dbData.add(0,new DBData(cursor.getInt(0),cursor.getString(1)));
         }
 
-        return result;
+        return dbData;
     }
 
 
-    public void delete(String id) {
+    public void removeArticle(int id) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("delete from LIMDATA where id=" + id);
+        db.execSQL("DELETE FROM LIMDATA WHERE ID=" + Integer.toString(id));
         db.close();
     }
-
-    /*List<Post> savedLists(){
-
-
-        return null;
-    }*/
-    boolean savePost(){
-
-        return false;
-    }
-
-
-    /*Post loadPost(int index){
-        return null;
-
-    }*/
 
 }
