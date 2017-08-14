@@ -1,9 +1,13 @@
 package sechan.intern.lessismore.lim;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,14 +42,14 @@ import static sechan.intern.lessismore.lim.components.enumcomp.EnumText.TEXTINCS
 import static sechan.intern.lessismore.lim.components.enumcomp.EnumText.TEXTITALIC;
 import static sechan.intern.lessismore.lim.components.enumcomp.EnumText.TEXTUNDERLINE;
 
-//public class LimActivity extends AppCompatActivity implements LimContract.View {
-public class LimActivity extends AppCompatActivity {
+public class LimActivity extends AppCompatActivity implements LimContract.View {
+//public class LimActivity extends AppCompatActivity  {
     // 액티비티에서 직접 뷰 구현
 
 
     //private LimContract.Presenter mPresenter;
     private static final int cGreen = -16726212; // 네이버 녹색상
-    private LimPresenter mPresenter;
+    private LimContract.Presenter mPresenter;
 
     RecyclerView rv;
     LimAdapter mAdapter;
@@ -75,6 +79,20 @@ public class LimActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        int permissionReadStorage = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
+        int permissionWriteStorage = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if(permissionReadStorage == PackageManager.PERMISSION_DENIED || permissionWriteStorage == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        } else {
+            showMessage("read/write storage permission authorized");
+        }
+
+
+
+
+
         new LimPresenter(LimRepo.getInstance(), this);
         rv = (RecyclerView) findViewById(R.id.rv_contents);
         rv.setLayoutManager(new LinearLayoutManager(this));
@@ -273,8 +291,8 @@ public class LimActivity extends AppCompatActivity {
             public void onClick(View view) {                // 텍스트 클릭
 
 
-                mPresenter.addCompText();  //-> 모델에서 생성후 Presenter에서 displayCompText 등으로 뷰를 호출해야함
-                addDialog.dismiss(); // 다이얼로그 제거도 Presenter가 해야 되는지 생각해볼 것
+                mPresenter.addCompText();
+                addDialog.dismiss();
 
 
             }
@@ -337,7 +355,7 @@ public class LimActivity extends AppCompatActivity {
 
 
     }
-
+    @Override
     public void setAdapter(LimAdapter adapter) {
         mAdapter = adapter;
         rv.setAdapter(mAdapter);
@@ -347,35 +365,19 @@ public class LimActivity extends AppCompatActivity {
 
     }
 
-    public RecyclerView getRecyclerView() {
-        return rv;
 
-    }
-
-    public void setPresenter(LimPresenter presenter) {
+    @Override
+    public void setPresenter(LimContract.Presenter presenter) {
         mPresenter = presenter;
     }
 
-    public void showSaved() {
-
-    }
-
-    public void showLoaded() {
-
-
-    }
-
-    public void showHelperLoaded(boolean loaded) {
-        if (loaded) Toast.makeText(getApplicationContext(), "로딩 완료", Toast.LENGTH_SHORT).show();
-
-    }
-
+    @Override
     public void showMessage(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
 
     }
 
-
+    @Override
     public void setBtn(EnumText style, boolean isSet) {
 
 
@@ -402,40 +404,40 @@ public class LimActivity extends AppCompatActivity {
         }
 
     }
-
+    @Override
     public void showRemoveButton(boolean isVisible) {
         if (isVisible) btnRemoveComp.setVisibility(View.VISIBLE);
         else btnRemoveComp.setVisibility(View.INVISIBLE);
     }
-
+    @Override
     public void setBtn(EnumText style, int color) {
         btnColor.setColorFilter(color);
     }
-
+    @Override
     public void clearBtn() {
         btnBold.clearColorFilter();
         btnItalic.clearColorFilter();
         btnUl.clearColorFilter();
         btnColor.clearColorFilter();
     }
-
+    @Override
     public void showTextWidget(boolean show) {
         if (show) llTextWidget.setVisibility(View.VISIBLE);
         else llTextWidget.setVisibility(View.GONE);
 
 
     }
-
+    @Override
     public void showStripBtn(boolean show) {
         if (show) btnImageLink.setVisibility(View.VISIBLE);
         else btnImageLink.setVisibility(View.INVISIBLE);
     }
-
+    @Override
     public void showDivideBtn(boolean show) {
         if (show) btnImageDivide.setVisibility(View.VISIBLE);
         else btnImageDivide.setVisibility(View.INVISIBLE);
     }
-
+    @Override
     public void setTitleImage(String imagePath) {
         if (imagePath != null) {
             Glide.with(this).load(imagePath).into(imageTitle);
@@ -453,6 +455,7 @@ public class LimActivity extends AppCompatActivity {
             isTitleImage = false;
         }
     }
+    @Override
     public void setTitleText(String title){
         editTitle.setText(title);
     }

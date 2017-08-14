@@ -23,7 +23,6 @@ public class MapAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public MapAdapter(ArrayList<MapItem> list, MapListActivity activity) {
         this.activity=activity;
         mapList = list;
-        // getItemCount 베이스 구현자체에서 수량 가져와서 돌림
     }
 
     public class MapListHolder extends RecyclerView.ViewHolder{

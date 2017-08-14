@@ -7,6 +7,7 @@ import sechan.intern.lessismore.lim.components.enumcomp.EnumText;
  */
 
 public class LimTextStyle {
+    // 규칙 14 접근자 메서드 적용
     EnumText type;
     int start;
     int end;

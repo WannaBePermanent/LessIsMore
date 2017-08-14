@@ -78,12 +78,8 @@ public class TextHelper {
         mStart = mEdit.getSelectionStart();
         mEnd = mEdit.getSelectionEnd();
 
-        //mSpan = mEdit.getText();
         if (!doSpace) getStyle();
-        /*
-        if (mPresenter.getCurrentComp() != null && mPresenter.getCurrentComp().getType() == COMP_TEXT)
-            saveText((CompText) mPresenter.getCurrentComp());
-            */
+
     }
 
 
@@ -178,10 +174,9 @@ public class TextHelper {
         initSpan.setSpan(newSpan,
                 start, end,
                 Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-        // 로딩할 때 쓰는 setStyle
 
     }
-    //setStyle로 메소드 바꿔서 줄임
+
 
     private boolean preStyle() { // 공백 생성후 선택
 

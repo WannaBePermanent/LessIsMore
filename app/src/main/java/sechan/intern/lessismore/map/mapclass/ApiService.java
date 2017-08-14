@@ -13,7 +13,6 @@ public interface ApiService {
 
     @GET("v1/search/local.json")
     Call<MapResult> mapRes(@Header("X-Naver-Client-Id") String id, @Header("X-Naver-Client-Secret") String secret, @Query("display") int display, @Query("start") int start, @Query("sort") String sort, @Query("query") String query);
-
     //상호명검색
 
 

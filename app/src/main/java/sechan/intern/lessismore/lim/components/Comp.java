@@ -12,7 +12,7 @@ public class Comp {
         this.type = type;
 
     }
-
+// 규칙 20. 클래스 계층 활용
 
     }
 

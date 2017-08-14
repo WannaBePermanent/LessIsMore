@@ -56,16 +56,17 @@ public class MapListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-;        setContentView(R.layout.layout_map_dialog);
+        ;
+        setContentView(R.layout.layout_map_dialog);
         retrofit = new Retrofit.Builder().baseUrl("https://openapi.naver.com").addConverterFactory(GsonConverterFactory.create()).build();
         service = retrofit.create(ApiService.class);
         btnSearch = (Button) findViewById(R.id.btn_search);
         editSearch = (EditText) findViewById(R.id.edit_search);
-        mapRV= (RecyclerView) findViewById(R.id.rv_map);
+        mapRV = (RecyclerView) findViewById(R.id.rv_map);
         mapRV.setLayoutManager(new LinearLayoutManager(this));
-        mapAdapter = new MapAdapter(mapList,this);
+        mapAdapter = new MapAdapter(mapList, this);
         mapRV.setAdapter(mapAdapter);
-        editSearch.setText("그린팩토리");
+        editSearch.setText("");
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import sechan.intern.lessismore.R;
+import sechan.intern.lessismore.lim.LimContract;
 import sechan.intern.lessismore.lim.LimPresenter;
 import sechan.intern.lessismore.lim.components.Comp;
 import sechan.intern.lessismore.lim.components.CompImage;
@@ -22,7 +23,7 @@ import sechan.intern.lessismore.lim.components.LimEditText;
 import sechan.intern.lessismore.lim.components.enumcomp.EnumComp;
 
 
-public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemTouchHelperListener {
+public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemTouchHelperListener, LimContract.Adapter {
     private LimPresenter mPresenter = null;
     private int mPosition = -1;
     private View mCompView = null;
@@ -41,7 +42,7 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
         mPosition = -1;
         return true;
     }
-
+    @Override
     public void setPresenter(LimPresenter presenter) {
         mPresenter = presenter;
     }
@@ -204,17 +205,14 @@ public class LimAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     }
 
 
-    public void saveText() {
-        //mPresenter.saveText();
-    }
-
+    @Override
     public void removeComp() {
         notifyItemRemoved(mPosition);
         //notifyDataSetChanged();
         mPosition = -1;
     }
 
-
+    @Override
     public int getPosition() {
         return mPosition;
     }

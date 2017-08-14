@@ -2,7 +2,6 @@ package sechan.intern.lessismore.lim.components.textstyle;
 
 
 import android.annotation.SuppressLint;
-import android.os.Parcel;
 import android.support.annotation.ColorInt;
 import android.text.style.ForegroundColorSpan;
 
@@ -14,7 +13,4 @@ public class LimForegroundColorSpan extends ForegroundColorSpan {
         super(color);
     }
 
-    public LimForegroundColorSpan(Parcel src) {
-        super(src);
-    }
 }

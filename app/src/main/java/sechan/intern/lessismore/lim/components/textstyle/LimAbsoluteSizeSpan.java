@@ -1,7 +1,6 @@
 package sechan.intern.lessismore.lim.components.textstyle;
 
 import android.annotation.SuppressLint;
-import android.os.Parcel;
 import android.text.style.AbsoluteSizeSpan;
 
 /**
@@ -16,11 +15,5 @@ public class LimAbsoluteSizeSpan extends AbsoluteSizeSpan {
         super(size);
     }
 
-    public LimAbsoluteSizeSpan(int size, boolean dip) {
-        super(size, dip);
-    }
 
-    public LimAbsoluteSizeSpan(Parcel src) {
-        super(src);
-    }
 }
