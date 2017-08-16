@@ -38,7 +38,7 @@ public class TextHelper {
     private LimPresenter mPresenter;
     private boolean doStyleJob = false;
     private boolean doSpace = false;
-    private LimStyleSpan spanBold = null; //클래스 만들어서
+    private LimStyleSpan spanBold = null;
     private LimStyleSpan spanItalic = null;
     private LimUnderlineSpan spanUnderline = null;
     private LimForegroundColorSpan spanColor = null;
@@ -201,7 +201,7 @@ public class TextHelper {
         spanItalic = null;
         spanUnderline = null;
         spanColor = null;
-        for (LimStyleSpan styleElement : styleSpan) {
+        for (LimStyleSpan styleElement : styleSpan) { //규칙 46. for-each 문 사용
             if (mSpan.getSpanStart(styleElement) == mEnd) continue; // 선택 앞쪽에서는 스타일 적용이 일어나면 안된다
             if (styleElement.getStyle() == Typeface.BOLD) {
                 spanBold = styleElement;

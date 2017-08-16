@@ -47,31 +47,20 @@ public class LimRepo {
 
 
     public int addCompText() {
-        Comp compText = new CompText();
-        if (compText != null) {
-            mPost.add(compText);
+            mPost.add(new CompText());
             return mPost.size() - 1;
-        }
-        return 0;
-
     }
 
     public int addCompImage(String imagePath) {
-        Comp compImage = new CompImage(imagePath);
-        if (compImage != null) {
-            mPost.add(compImage);
+            mPost.add(new CompImage(imagePath));
             return mPost.size() - 1;
-        }
-        return 0;
+
     }
 
     public int addCompImage(String imagePath, int position) {
-        Comp compImage = new CompImage(imagePath);
-        if (compImage != null) {
-            mPost.add(position, compImage);
+            mPost.add(position, new CompImage(imagePath));
             return position;
-        }
-        return 0;
+
     }
 
     public int addCompMap(int mapx, int mapy, String title, String address) {

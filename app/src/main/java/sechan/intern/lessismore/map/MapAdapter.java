@@ -46,17 +46,19 @@ public class MapAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final MapListHolder mapHolder = (MapListHolder) holder;
-        mapHolder.tvTitle.setText(mapList.get(position).title.replace("<b>","").replace("</b>",""));
-        mapHolder.tvAddress.setText(mapList.get(position).address);
+        MapItem mapItem = mapList.get(position);
+        mapItem.setTitle(mapItem.getTitle().replace("<b>","").replace("</b>",""));
+        mapHolder.tvTitle.setText(mapItem.getTitle());
+        mapHolder.tvAddress.setText(mapItem.getRoadAddress());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 MapItem mapItem = mapList.get(position);
                 Intent intent = new Intent();
-                intent.putExtra("title",mapItem.title.replace("<b>","").replace("</b>",""));
-                intent.putExtra("address",mapItem.roadAddress);
-                intent.putExtra("mapx",mapItem.mapx);
-                intent.putExtra("mapy",mapItem.mapy);
+                intent.putExtra("title",mapItem.getTitle());
+                intent.putExtra("address",mapItem.getRoadAddress());
+                intent.putExtra("mapx",mapItem.getMapx());
+                intent.putExtra("mapy",mapItem.getMapy());
                 activity.setResult(Activity.RESULT_OK,intent);
                 activity.finish();
 

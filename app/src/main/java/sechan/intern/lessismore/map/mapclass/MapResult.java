@@ -8,12 +8,25 @@ import java.util.ArrayList;
 
 public class MapResult {
 
-    public int total;
-    public int start;
-    public int display;
-    public ArrayList<MapItem> items;
+    // 규칙 14 접근자 메서드 적용
+    int total;
+    int start;
+    int display;
+    ArrayList<MapItem> items;
 
+    public int getTotal() {
+        return total;
+    }
 
+    public int getStart() {
+        return start;
+    }
 
+    public int getDisplay() {
+        return display;
+    }
 
+    public ArrayList<MapItem> getItems() {
+        return items;
+    }
 }

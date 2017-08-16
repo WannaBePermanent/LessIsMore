@@ -78,8 +78,8 @@ public class MapListActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             map = response.body();
                             mapList.clear();
-                            mapList.addAll(map.items);
-                            if (map.total > 0) {
+                            mapList.addAll(map.getItems());
+                            if (map.getTotal() > 0) {
                                 mapAdapter.notifyDataSetChanged();
                             }
 
