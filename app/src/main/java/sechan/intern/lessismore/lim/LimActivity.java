@@ -75,6 +75,8 @@ public class LimActivity extends AppCompatActivity implements LimContract.View {
     ImageButton btnLoadArticle, btnRemoveArticle;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,14 +85,11 @@ public class LimActivity extends AppCompatActivity implements LimContract.View {
 
         int permissionReadStorage = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
         int permissionWriteStorage = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if(permissionReadStorage == PackageManager.PERMISSION_DENIED || permissionWriteStorage == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        if (permissionReadStorage == PackageManager.PERMISSION_DENIED || permissionWriteStorage == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
         } else {
-            showMessage("read/write storage permission authorized");
+
         }
-
-
-
 
 
         new LimPresenter(LimRepo.getInstance(), this);
@@ -259,19 +258,19 @@ public class LimActivity extends AppCompatActivity implements LimContract.View {
 
             }
         });
-        btnLoadArticle.setOnClickListener(new View.OnClickListener(){
+        btnLoadArticle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (articlePosition >=0) {
+                if (articlePosition >= 0) {
                     loadDialog.dismiss();
                     mPresenter.loadArticle(articlePosition);
                 }
             }
         });
-        btnRemoveArticle.setOnClickListener(new View.OnClickListener(){
+        btnRemoveArticle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (articlePosition >=0) {
+                if (articlePosition >= 0) {
                     loadDialog.dismiss();
                     mPresenter.removeArticle(articlePosition);
 
@@ -353,8 +352,8 @@ public class LimActivity extends AppCompatActivity implements LimContract.View {
             }
         });
 
-
     }
+
     @Override
     public void setAdapter(LimAdapter adapter) {
         mAdapter = adapter;
@@ -404,15 +403,18 @@ public class LimActivity extends AppCompatActivity implements LimContract.View {
         }
 
     }
+
     @Override
     public void showRemoveButton(boolean isVisible) {
         if (isVisible) btnRemoveComp.setVisibility(View.VISIBLE);
         else btnRemoveComp.setVisibility(View.INVISIBLE);
     }
+
     @Override
     public void setBtn(EnumText style, int color) {
         btnColor.setColorFilter(color);
     }
+
     @Override
     public void clearBtn() {
         btnBold.clearColorFilter();
@@ -420,6 +422,7 @@ public class LimActivity extends AppCompatActivity implements LimContract.View {
         btnUl.clearColorFilter();
         btnColor.clearColorFilter();
     }
+
     @Override
     public void showTextWidget(boolean show) {
         if (show) llTextWidget.setVisibility(View.VISIBLE);
@@ -427,16 +430,19 @@ public class LimActivity extends AppCompatActivity implements LimContract.View {
 
 
     }
+
     @Override
     public void showStripBtn(boolean show) {
         if (show) btnImageLink.setVisibility(View.VISIBLE);
         else btnImageLink.setVisibility(View.INVISIBLE);
     }
+
     @Override
     public void showDivideBtn(boolean show) {
         if (show) btnImageDivide.setVisibility(View.VISIBLE);
         else btnImageDivide.setVisibility(View.INVISIBLE);
     }
+
     @Override
     public void setTitleImage(String imagePath) {
         if (imagePath != null) {
@@ -455,8 +461,9 @@ public class LimActivity extends AppCompatActivity implements LimContract.View {
             isTitleImage = false;
         }
     }
+
     @Override
-    public void setTitleText(String title){
+    public void setTitleText(String title) {
         editTitle.setText(title);
     }
 

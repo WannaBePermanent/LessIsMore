@@ -20,14 +20,16 @@ import sechan.intern.lessismore.map.mapclass.MapItem;
 public class MapAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<MapItem> mapList;
     private MapListActivity activity;
+
     public MapAdapter(ArrayList<MapItem> list, MapListActivity activity) {
-        this.activity=activity;
+        this.activity = activity;
         mapList = list;
     }
 
-    public class MapListHolder extends RecyclerView.ViewHolder{
+    public class MapListHolder extends RecyclerView.ViewHolder {
         public TextView tvTitle;
         public TextView tvAddress;
+
         public MapListHolder(View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
@@ -38,7 +40,7 @@ public class MapAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder;
-        View mapListView = LayoutInflater.from(parent.getContext()).inflate( R.layout.layout_map_list, parent, false);
+        View mapListView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_map_list, parent, false);
         viewHolder = new MapListHolder(mapListView);
         return viewHolder;
     }
@@ -47,19 +49,19 @@ public class MapAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final MapListHolder mapHolder = (MapListHolder) holder;
         MapItem mapItem = mapList.get(position);
-        mapItem.setTitle(mapItem.getTitle().replace("<b>","").replace("</b>",""));
+        mapItem.setTitle(mapItem.getTitle().replace("<b>", "").replace("</b>", ""));
         mapHolder.tvTitle.setText(mapItem.getTitle());
         mapHolder.tvAddress.setText(mapItem.getRoadAddress());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        mapHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 MapItem mapItem = mapList.get(position);
-                Intent intent = new Intent();
-                intent.putExtra("title",mapItem.getTitle());
-                intent.putExtra("address",mapItem.getRoadAddress());
-                intent.putExtra("mapx",mapItem.getMapx());
-                intent.putExtra("mapy",mapItem.getMapy());
-                activity.setResult(Activity.RESULT_OK,intent);
+                Intent mapIntent = new Intent();
+                mapIntent.putExtra("title", mapItem.getTitle());
+                mapIntent.putExtra("address", mapItem.getRoadAddress());
+                mapIntent.putExtra("mapx", mapItem.getMapx());
+                mapIntent.putExtra("mapy", mapItem.getMapy());
+                activity.setResult(Activity.RESULT_OK, mapIntent);
                 activity.finish();
 
             }

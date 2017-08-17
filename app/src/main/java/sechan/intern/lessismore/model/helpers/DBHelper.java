@@ -26,13 +26,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sql = "create table LIMDATA(id integer PRIMARY KEY autoincrement, JSONDATA text);";
+        String sql = "CREATE TABLE LIMDATA(id integer PRIMARY KEY autoincrement, JSONDATA text);";
         db.execSQL(sql);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String sql = "drop table item;"; // 테이블 드랍
+        String sql = "DROP TABLE ITEM;"; // 테이블 드랍
         db.execSQL(sql);
         onCreate(db); // 다시 테이블 생성
     }
@@ -47,12 +47,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public ArrayList<LimDBArticle> getArticles() {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<LimDBArticle> limDbArticle = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT * FROM LIMDATA", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM LIMDATA ORDER BY id DESC", null);
         while (cursor.moveToNext()) {
-            /*result += "번호 : " + cursor.getString(0)
-                    + "\n데이터 : "
-                    + cursor.getString(1)+"\n";*/
-            limDbArticle.add(0, new LimDBArticle(cursor.getInt(0), cursor.getString(1)));
+            limDbArticle.add(new LimDBArticle(cursor.getInt(0), cursor.getString(1)));
         }
 
         return limDbArticle;
@@ -61,7 +58,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void removeArticle(int id) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE FROM LIMDATA WHERE ID=" + Integer.toString(id));
+        db.execSQL("DELETE FROM LIMDATA WHERE id=" + Integer.toString(id));
         db.close();
     }
 

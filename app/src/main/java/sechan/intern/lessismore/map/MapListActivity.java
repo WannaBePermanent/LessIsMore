@@ -56,7 +56,7 @@ public class MapListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ;
+
         setContentView(R.layout.layout_map_dialog);
         retrofit = new Retrofit.Builder().baseUrl("https://openapi.naver.com").addConverterFactory(GsonConverterFactory.create()).build();
         service = retrofit.create(ApiService.class);
@@ -87,6 +87,7 @@ public class MapListActivity extends AppCompatActivity {
 
                         }
                     }
+
 
                     @Override
                     public void onFailure(Call<MapResult> call, Throwable t) {

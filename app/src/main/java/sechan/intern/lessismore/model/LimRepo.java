@@ -91,9 +91,6 @@ public class LimRepo {
         LimArticle article = new LimArticle(title, titleImage, mPost, date);
         String jsonArticle = gson.toJson(article);
         dbHelper.insertArticle(jsonArticle);
-
-
-
         return 0;
 
     }

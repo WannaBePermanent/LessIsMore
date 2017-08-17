@@ -81,8 +81,6 @@ public class LimPresenter implements LimContract.Presenter {
         int ret = mRepo.addCompImage(imagePath, position);
         if (ret >= 0) {
             mAdapter.notifyItemRangeChanged(ret, mPost.size());
-
-
         }
     }
 
@@ -98,10 +96,6 @@ public class LimPresenter implements LimContract.Presenter {
         if (position >= 0) {
             mPost.remove(position);
             mAdapter.removeComp();
-            //mAdapter.notifyItemRemoved(position);
-            //  mAdapter.notifyItemRangeChanged(position,mPost.size());
-            //mAdapter.notifyDataSetChanged();
-
 
             hideBtn();
         }
@@ -134,13 +128,11 @@ public class LimPresenter implements LimContract.Presenter {
         CompImage currentImage = (CompImage) mPost.get(position);
         if ((prevImage.getSize() + currentImage.getSize()) <= 3) {
             prevImage.getImagePath().addAll(currentImage.getImagePath());
-            //mPost.remove(position);
             mRepo.removeComp(position);
             mAdapter.notifyDataSetChanged();
         }
         hideBtn();
 
-        //mAdapter.notifyItemChanged(position-1); 체인지 시에 onBind 고려할것
     }
 
     @Override
